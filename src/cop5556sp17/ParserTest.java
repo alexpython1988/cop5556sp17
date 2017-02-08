@@ -71,6 +71,22 @@ public class ParserTest {
 		Parser parser = new Parser(scanner);
 		parser.factor();
 	}
+	
+	@Test
+	public void testParamDec()  throws IllegalCharException, IllegalNumberException, SyntaxException{
+		String input = "url abc";
+		String input1 = "file abc";
+		String input2 = "integer abc";
+		String input3 = "boolean abc";
+		String input4 = "123 abc";
+		String input5 = "true abc";
+		Scanner scanner = new Scanner(input3);
+		scanner.scan();
+		Parser parser = new Parser(scanner);
+		parser.paramDec();
+	}
+	
+	
 
 	@Test
 	public void testArg() throws IllegalCharException, IllegalNumberException, SyntaxException {
@@ -109,6 +125,7 @@ public class ParserTest {
 //		String input2 = "prog1 {boolean abc}";
 //		String input3 = "prog1 {image abc012}";
 		String input4 = "prog1 {if((screenwidth & screenheight)|(true % false) == 12/20 != _abc){image _mm123 sleep _mm123 + 7 > 5;} while(true){}}";
+//		String input5 =  "prog1 }";
 		
 		Parser parser = new Parser(new Scanner(input4).scan());
 		parser.parse();

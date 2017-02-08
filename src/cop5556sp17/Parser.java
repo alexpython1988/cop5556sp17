@@ -51,18 +51,20 @@ public class Parser {
 		return;
 	}
 	
-/*grammar for LL(1) parser design:
+/*
+grammar for LL(1) parser design:
+
 implement?	check?		grammer
 done	 				program ::=  IDENT block
 done					program ::=  IDENT param_dec ( , param_dec )*   block
-done					param_dec ::= ( KW_URL | KW_FILE | KW_INTEGER | KW_BOOLEAN)   IDENT
+done		pass		param_dec ::= ( KW_URL | KW_FILE | KW_INTEGER | KW_BOOLEAN)   IDENT
 done					block ::= { ( dec | statement) * }
 done		pass		dec ::= (  KW_INTEGER | KW_BOOLEAN | KW_IMAGE | KW_FRAME)    IDENT
 done					statement ::= OP_SLEEP expression ; | whileStatement | ifStatement | chain ; | assign ;
 done					assign ::= IDENT ASSIGN expression
 done					chain ::=  chainElem arrowOp chainElem ( arrowOp  chainElem)*
-done					whileStatement ::= KW_WHILE ( expression ) block
-done					ifStatement ::= KW_IF ( expression ) block
+done		pass		whileStatement ::= KW_WHILE ( expression ) block
+done		pass		ifStatement ::= KW_IF ( expression ) block
 done		pass		arrowOp ¡Ë= ARROW   |   BARARROW
 done					chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
 done		pass		filterOp ::= KW_BLUR |KW_GRAY | KW_CONVOLVE
@@ -217,16 +219,23 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		}
 
 		default:
-			throw new SyntaxException("illegal factor: " + kind + 
-					". The illegal token is at " + scanner.getLinePos(t));
+			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) +
+					". Saw " + kind + " expected one from [LBRACE, KW_URL, KW_FILE, KW_INTEGER, KW_BOOLEAN]");
 		}
 	}
+	
+	/* Important!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * In functions paramDec(), dec() and assign(), use cosume() method instead of match in real production
+	 * match() is unnecessary for double safety check and slow down the parser speed
+	 * use match here is only aimed for pass the course test 
+	 */
 	
 //  param_dec ::= ( KW_URL | KW_FILE | KW_INTEGER | KW_BOOLEAN)   IDENT
 	void paramDec() throws SyntaxException {
 		//TODO
 		System.out.println("parmdec");
-		consume();
+//		consume();
+		match(KW_URL, KW_FILE, KW_INTEGER, KW_BOOLEAN);
 		match(IDENT);
 	}
 
@@ -234,7 +243,8 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 	void dec() throws SyntaxException {
 		//TODO
 		System.out.println("dec");
-		consume();
+//		consume();
+		match(KW_INTEGER, KW_BOOLEAN, KW_IMAGE, KW_FRAME);
 		match(IDENT);
 	}
 
@@ -313,7 +323,8 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 	void assign() throws SyntaxException {
 		//TODO
 		System.out.println("assign");
-		consume();
+//		consume();
+		match(IDENT);
 		match(ASSIGN);
 		expression();
 	}

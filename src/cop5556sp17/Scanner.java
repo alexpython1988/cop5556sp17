@@ -473,7 +473,7 @@ public class Scanner {
 					}catch (NumberFormatException e){
 						throw new IllegalNumberException("At line: " + 
 								FindLineNumber(pos) + " at pos: " + 
-								(pos - startPosForEachLine.get(FindLineNumber(pos))) + 
+								(startPos - startPosForEachLine.get(FindLineNumber(pos))) + 
 								" the imput number: " + inputNum + " exceed the limit of Integer range");
 					}
 					

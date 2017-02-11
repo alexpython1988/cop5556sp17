@@ -55,18 +55,18 @@ public class Parser {
 grammar for LL(1) parser design:
 
 implement?	check?		grammer
-done	 				program ::=  IDENT block
-done					program ::=  IDENT param_dec ( , param_dec )*   block
+done	 	pass		program ::=  IDENT block
+done		pass		program ::=  IDENT param_dec ( , param_dec )*   block
 done		pass		param_dec ::= ( KW_URL | KW_FILE | KW_INTEGER | KW_BOOLEAN)   IDENT
-done					block ::= { ( dec | statement) * }
+done		pass		block ::= { ( dec | statement) * }
 done		pass		dec ::= (  KW_INTEGER | KW_BOOLEAN | KW_IMAGE | KW_FRAME)    IDENT
-done					statement ::= OP_SLEEP expression ; | whileStatement | ifStatement | chain ; | assign ;
-done					assign ::= IDENT ASSIGN expression
-done					chain ::=  chainElem arrowOp chainElem ( arrowOp  chainElem)*
+done		pass		statement ::= OP_SLEEP expression ; | whileStatement | ifStatement | chain ; | assign ;
+done		pass		assign ::= IDENT ASSIGN expression
+done		pass		chain ::=  chainElem arrowOp chainElem ( arrowOp  chainElem)*
 done		pass		whileStatement ::= KW_WHILE ( expression ) block
 done		pass		ifStatement ::= KW_IF ( expression ) block
 done		pass		arrowOp ）= ARROW   |   BARARROW
-done					chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
+done		pass		chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
 done		pass		filterOp ::= KW_BLUR |KW_GRAY | KW_CONVOLVE
 done		pass		frameOp ::= KW_SHOW | KW_HIDE | KW_MOVE | KW_XLOC |KW_YLOC
 done		pass		imageOp ::= KW_WIDTH |KW_HEIGHT | KW_SCALE
@@ -85,7 +85,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	expression ）= term ( relOp term)*
 	void expression() throws SyntaxException {
 		//TODO
-		System.out.println("expr");
+		//System.out.println("expr");
 		term();
 		while(relOp(t)){
 			consume();
@@ -96,7 +96,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	term ）= elem ( weakOp  elem)*
 	void term() throws SyntaxException {
 		//TODO
-		System.out.println("term");
+		//System.out.println("term");
 		elem();
 		while(weakOp(t)){
 			consume();
@@ -107,7 +107,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	elem ）= factor ( strongOp factor)*
 	void elem() throws SyntaxException {
 		//TODO
-		System.out.println("elem");
+		//System.out.println("elem");
 		factor();
 		
 		while(strongOp(t)){
@@ -119,7 +119,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	factor ）= IDENT | INT_LIT | KW_TRUE | KW_FALSE
 //	       	| KW_SCREENWIDTH | KW_SCREENHEIGHT | ( expression )
 	void factor() throws SyntaxException {
-		System.out.println("factor");
+		//System.out.println("factor");
 		Kind kind = t.kind;
 		switch (kind) {
 		case IDENT: {
@@ -161,7 +161,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //  block ::= { ( dec | statement) * }
 	void block() throws SyntaxException {
 		//TODO
-		System.out.println("block");
+		//System.out.println("block");
 		match(LBRACE);
 		while(true){
 			if(isDec(t)){
@@ -197,7 +197,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	program ::=  IDENT param_dec ( , param_dec )*   block
 	void program() throws SyntaxException {
 		//TODO
-		System.out.println("program");
+		//System.out.println("program");
 		match(IDENT);
 		Kind kind = t.kind;
 		switch (kind) {
@@ -210,13 +210,16 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		case KW_FILE:
 		case KW_INTEGER:
 		case KW_BOOLEAN:{
+			//System.out.println(t.kind);
 			paramDec();
 			while(t.isKind(COMMA)){
 				consume();
+				//System.out.println(t.kind);
 				paramDec();
 			}
 			block();
 		}
+			break;
 
 		default:
 			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) +
@@ -233,8 +236,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //  param_dec ::= ( KW_URL | KW_FILE | KW_INTEGER | KW_BOOLEAN)   IDENT
 	void paramDec() throws SyntaxException {
 		//TODO
-		System.out.println("parmdec");
-//		consume();
+		//System.out.println("parmdec");
 		match(KW_URL, KW_FILE, KW_INTEGER, KW_BOOLEAN);
 		match(IDENT);
 	}
@@ -242,7 +244,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	dec ::= (  KW_INTEGER | KW_BOOLEAN | KW_IMAGE | KW_FRAME)    IDENT
 	void dec() throws SyntaxException {
 		//TODO
-		System.out.println("dec");
+		//System.out.println("dec");
 //		consume();
 		match(KW_INTEGER, KW_BOOLEAN, KW_IMAGE, KW_FRAME);
 		match(IDENT);
@@ -251,7 +253,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	statement ::=   OP_SLEEP expression ; | whileStatement | ifStatement | chain ; | assign ;
 	void statement() throws SyntaxException {
 		//TODO
-		System.out.println("statement");
+		//System.out.println("statement");
 		Kind kind = t.kind;
 		Token nextToken = scanner.peek(); //nextToken = t.next
 		
@@ -309,7 +311,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	chain ::=  chainElem arrowOp chainElem ( arrowOp  chainElem)*
 	void chain() throws SyntaxException {
 		//TODO
-		System.out.println("chain");
+		//System.out.println("chain");
 		chainElem();
 		match(ARROW, BARARROW);
 		chainElem();
@@ -322,7 +324,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	assign ::= IDENT ASSIGN expression
 	void assign() throws SyntaxException {
 		//TODO
-		System.out.println("assign");
+		//System.out.println("assign");
 //		consume();
 		match(IDENT);
 		match(ASSIGN);
@@ -332,7 +334,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
 	void chainElem() throws SyntaxException {
 		//TODO
-		System.out.println("chainElem");
+		//System.out.println("chainElem");
 		if(t.isKind(IDENT)){
 			consume();
 		}else if(filterOp(t) || frameOp(t) || imageOp(t)){
@@ -348,7 +350,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	whileStatement ::= KW_WHILE ( expression ) block
 	void if_while_statement() throws SyntaxException {
 		//TODO
-		System.out.println("if_while");
+		//System.out.println("if_while");
 		consume();
 		match(LPAREN);
 		expression();
@@ -359,7 +361,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //	arg ::= ε | ( expression (,expression)* )
 	void arg() throws SyntaxException {
 		//TODO
-		System.out.println("arg");
+		//System.out.println("arg");
 		if(t.isKind(LPAREN)){
 			consume();
 			expression();

@@ -65,24 +65,24 @@ done		pass		assign ::= IDENT ASSIGN expression
 done		pass		chain ::=  chainElem arrowOp chainElem ( arrowOp  chainElem)*
 done		pass		whileStatement ::= KW_WHILE ( expression ) block
 done		pass		ifStatement ::= KW_IF ( expression ) block
-done		pass		arrowOp ）= ARROW   |   BARARROW
+done		pass		arrowOp ::= ARROW   |   BARARROW
 done		pass		chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
 done		pass		filterOp ::= KW_BLUR |KW_GRAY | KW_CONVOLVE
 done		pass		frameOp ::= KW_SHOW | KW_HIDE | KW_MOVE | KW_XLOC |KW_YLOC
 done		pass		imageOp ::= KW_WIDTH |KW_HEIGHT | KW_SCALE
 done		pass		arg ::= ε | ( expression (   ,expression)* )
-done		pass		expression ）= term ( relOp term)*
-done		pass		term ）= elem ( weakOp  elem)*
-done		pass		elem ）= factor ( strongOp factor)*
-done		pass		factor ）= IDENT | INT_LIT | KW_TRUE | KW_FALSE | KW_SCREENWIDTH | KW_SCREENHEIGHT | ( expression )   		       			
-done		pass		relOp ）=  LT | LE | GT | GE | EQUAL | NOTEQUAL 
-done		pass		weakOp  ）= PLUS | MINUS | OR   
-done		pass		strongOp ）= TIMES | DIV | AND | MOD 
+done		pass		expression ::= term ( relOp term)*
+done		pass		term ::= elem ( weakOp  elem)*
+done		pass		elem ::= factor ( strongOp factor)*
+done		pass		factor ::= IDENT | INT_LIT | KW_TRUE | KW_FALSE | KW_SCREENWIDTH | KW_SCREENHEIGHT | ( expression )   		       			
+done		pass		relOp ::=  LT | LE | GT | GE | EQUAL | NOTEQUAL 
+done		pass		weakOp  ::= PLUS | MINUS | OR   
+done		pass		strongOp ::= TIMES | DIV | AND | MOD 
 
 Based on the design, we can find the predict is not unique so it is not a LL(1)
 	 */
 	
-//	expression ）= term ( relOp term)*
+//	expression ::= term ( relOp term)*
 	void expression() throws SyntaxException {
 		//TODO
 		//System.out.println("expr");
@@ -93,7 +93,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		}
 	}
 
-//	term ）= elem ( weakOp  elem)*
+//	term ::= elem ( weakOp  elem)*
 	void term() throws SyntaxException {
 		//TODO
 		//System.out.println("term");
@@ -104,7 +104,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		}
 	}
 
-//	elem ）= factor ( strongOp factor)*
+//	elem ::= factor ( strongOp factor)*
 	void elem() throws SyntaxException {
 		//TODO
 		//System.out.println("elem");
@@ -116,7 +116,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		}
 	}
 
-//	factor ）= IDENT | INT_LIT | KW_TRUE | KW_FALSE
+//	factor ::= IDENT | INT_LIT | KW_TRUE | KW_FALSE
 //	       	| KW_SCREENWIDTH | KW_SCREENHEIGHT | ( expression )
 	void factor() throws SyntaxException {
 		//System.out.println("factor");
@@ -370,11 +370,11 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 				expression();
 			}
 			match(RPAREN);
-		}else if(t.isKind(SEMI) || arrowOp(t)){
-			//pass
-		}else{
-			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
-					" saw " + t.kind + " expected [LPAREN, SEMI, ARROW, BARARROW]");
+//		}else if(t.isKind(SEMI) || arrowOp(t)){
+//			//pass
+//		}else{
+//			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
+//					" saw " + t.kind + " expected [LPAREN, SEMI, ARROW, BARARROW]");
 		}
 	}
 	

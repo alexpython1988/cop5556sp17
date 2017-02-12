@@ -217,15 +217,30 @@ public class ParserTest {
 	
 	
 	@Test
-	public void testparse() throws IllegalCharException, IllegalNumberException, SyntaxException{
+	public void testparse123() throws IllegalCharException, IllegalNumberException, SyntaxException{
 		List<String> list = new ArrayList<String>();
 		
 		list.add("program0 url google, file google_drive \n"
 				+ "{boolean abc abc <- true;\n"
-				+ "move (abc) |-> google_drive; sleep(110); \n"
+				+ "move (abc) |-> google_drive; sleep(110)              ; \n"
 				+ "while(abc < 10){abc <- abc - 1; abc -> google -> show;}\n"
 				+ "}");	
-		list.add("program0 {}");
+		list.add("/*this is a test for grammer check\n*/"
+				+ "program0 {image _abc _abc <-(2+3)*5;\n "
+				+ "_abc |-> show (123, 456) -> blue;\n"
+				+ "sleep (2*5 != (3+5)*2);\n"
+				+ "/*comment line again*/\n"
+				+ "if(bac > 12){integer r0 integer r1 r0 <-12; r1 <- 34;\n"
+				+ "xloc (screenwidth|(r0), screenheight&(r1)) -> yloc(screenwidth+(r1), screenheight*(r0)) |-> convolve;}\n"
+				+ "}");
+		list.add("pro123 integer a1, boolean b1{\n"
+				+ "frame $xyz123 sleep(true);\n"
+				+ "image img  while(img != false){img <- ((4+6)*10 == 100);\n"
+				+ "img -> hide;}\n"
+				+ "integer abc if((abc-1)>(bcd*5)){abc -> xloc -> bcd -> yloc |-> width(123,456) |-> height(456,123);\n"
+				+ "abc <- abc == 20; bcd <- bcd != 20;}\n"
+				+ "}");
+		list.add("aaa{}");
 			
 		testCases(list);
 	}
@@ -241,6 +256,7 @@ public class ParserTest {
 				if(flag)
 					flag = false;
 				err.put(i, e.getMessage());
+				continue;
 			}
 		}
 		

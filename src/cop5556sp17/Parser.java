@@ -2,6 +2,8 @@ package cop5556sp17;
 
 import cop5556sp17.Scanner.Kind;
 import static cop5556sp17.Scanner.Kind.*;
+
+import cop5556sp17.AST.ASTNode;
 import cop5556sp17.Scanner.Token;
 
 public class Parser {
@@ -15,19 +17,6 @@ public class Parser {
 	public static class SyntaxException extends Exception {
 		public SyntaxException(String message) {
 			super(message);
-		}
-	}
-	
-	/**
-	 * Useful during development to ensure unimplemented routines are
-	 * not accidentally called during development.  Delete it when 
-	 * the Parser is finished.
-	 *
-	 */
-	@SuppressWarnings("serial")	
-	public static class UnimplementedFeatureException extends RuntimeException {
-		public UnimplementedFeatureException() {
-			super();
 		}
 	}
 
@@ -52,7 +41,7 @@ public class Parser {
 	}
 	
 /*
-grammar for LL(1) parser design:
+grammar for LL(2) parser design:
 
 implement?	check?		grammer
 done	 	pass		program ::=  IDENT block
@@ -70,7 +59,7 @@ done		pass		chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
 done		pass		filterOp ::= KW_BLUR |KW_GRAY | KW_CONVOLVE
 done		pass		frameOp ::= KW_SHOW | KW_HIDE | KW_MOVE | KW_XLOC |KW_YLOC
 done		pass		imageOp ::= KW_WIDTH |KW_HEIGHT | KW_SCALE
-done		pass		arg ::= ¦Å | ( expression (   ,expression)* )
+done		pass		arg ::= epsil | ( expression (   ,expression)* )
 done		pass		expression ::= term ( relOp term)*
 done		pass		term ::= elem ( weakOp  elem)*
 done		pass		elem ::= factor ( strongOp factor)*
@@ -83,7 +72,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 	 */
 	
 //	expression ::= term ( relOp term)*
-	void expression() throws SyntaxException {
+	ASTNode expression() throws SyntaxException {
 		//TODO
 		//System.out.println("expr");
 		term();
@@ -91,6 +80,8 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 			consume();
 			term();
 		}
+		
+		return null;
 	}
 
 //	term ::= elem ( weakOp  elem)*
@@ -154,7 +145,8 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		default:
 			//you will want to provide a more useful error message
 			throw new SyntaxException("illegal factor: " + kind + 
-					". The illegal toke is at " + scanner.getLinePos(t));
+					". The illegal toke is at " + scanner.getLinePos(t) + 
+					" expected one of [IDENT,INT_LIT,KW_TRUE,KW_FALSE,KW_SCREENWIDTH,KW_SCREENHEIGHT,LPARENT");
 		}
 	}
 
@@ -358,7 +350,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		block();
 	}
 
-//	arg ::= ¦Å | ( expression (,expression)* )
+//	arg ::= epsil | ( expression (,expression)* )
 	void arg() throws SyntaxException {
 		//TODO
 		//System.out.println("arg");
@@ -376,6 +368,14 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
 //					" saw " + t.kind + " expected [LPAREN, SEMI, ARROW, BARARROW]");
 		}
+		
+//		match(LPAREN);
+//		expression();
+//		while(t.isKind(COMMA)){
+//			consume();
+//			expression();
+//		}
+//		match(RPAREN);
 	}
 	
 	/*
@@ -440,7 +440,7 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 			return consume();
 		}
 		throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
-				" saw " + t.kind + "expected " + kind);
+				" saw " + t.kind + " expected " + kind);
 	}
 
 	/**
@@ -465,14 +465,14 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("[");
-		for(int i = 0; i < kinds.length - 1;i++){
+		for(int i = 0; i < kinds.length - 1; i++){
 			sb.append(kinds[i] + ", ");
 		}
 		
 		sb.append(kinds[kinds.length - 1] + "]");
 		
 		throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
-				" saw " + t.kind + "expected one of" + sb.toString()); //replace this statement
+				" saw " + t.kind + " expected one of" + sb.toString()); //replace this statement
 	}
 
 	/**

@@ -6,16 +6,22 @@ import java.util.List;
 import cop5556sp17.Scanner.Kind;
 import cop5556sp17.Scanner.Token;
 import cop5556sp17.AST.AssignmentStatement;
+import cop5556sp17.AST.BinaryChain;
 import cop5556sp17.AST.BinaryExpression;
 import cop5556sp17.AST.Block;
 import cop5556sp17.AST.BooleanLitExpression;
 import cop5556sp17.AST.Chain;
+import cop5556sp17.AST.ChainElem;
 import cop5556sp17.AST.ConstantExpression;
 import cop5556sp17.AST.Dec;
 import cop5556sp17.AST.Expression;
+import cop5556sp17.AST.FilterOpChain;
+import cop5556sp17.AST.FrameOpChain;
+import cop5556sp17.AST.IdentChain;
 import cop5556sp17.AST.IdentExpression;
 import cop5556sp17.AST.IdentLValue;
 import cop5556sp17.AST.IfStatement;
+import cop5556sp17.AST.ImageOpChain;
 import cop5556sp17.AST.IntLitExpression;
 import cop5556sp17.AST.ParamDec;
 import cop5556sp17.AST.Program;
@@ -363,7 +369,7 @@ public class Parser {
 		case OP_WIDTH:
 		case OP_HEIGHT:
 		case KW_SCALE:{
-			chain();
+			statment = chain();
 			match(SEMI);
 		}
 			break;
@@ -380,15 +386,20 @@ public class Parser {
 	Chain chain() throws SyntaxException {
 		//TODO
 		//System.out.println("chain");
-		chainElem();
-		match(ARROW, BARARROW);
-		chainElem();
+		Token firstToken = t;
+		ChainElem ce0 = chainElem();
+		Token arrow = match(ARROW, BARARROW);
+		ChainElem ce1 = chainElem();
+		
+		BinaryChain bc = new BinaryChain(firstToken, ce0, arrow, ce1); 
+		
 		while(arrowOp(t)){
-			consume();
-			chainElem();
+			arrow = consume();
+			ChainElem ce2 = chainElem();
+			bc = new BinaryChain(firstToken, bc, arrow, ce2);
 		}
 		
-		return null;
+		return bc;
 	}
 	
 	AssignmentStatement assign() throws SyntaxException {
@@ -403,18 +414,33 @@ public class Parser {
 		return new AssignmentStatement(firstToken, var, e);
 	}
 	
-	void chainElem() throws SyntaxException {
+	ChainElem chainElem() throws SyntaxException {
 		//TODO
 		//System.out.println("chainElem");
+		ChainElem ce = null;
+		Token firstToken = t;
+		
 		if(t.isKind(IDENT)){
 			consume();
-		}else if(filterOp(t) || frameOp(t) || imageOp(t)){
+			ce = new IdentChain(firstToken);
+		}else if(filterOp(t)){
 			consume();
-			arg();
+			Tuple arg = arg();
+			ce = new FilterOpChain(firstToken, arg);
+		}else if(frameOp(t)){
+			consume();		
+			Tuple arg = arg();
+			ce = new FrameOpChain(firstToken, arg);
+		}else if(imageOp(t)){
+			consume();
+			Tuple arg = arg();
+			ce = new ImageOpChain(firstToken, arg);
 		}else{
 			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
 				" saw " + t.kind + "expected [IDENT, filterOp, frameOp, imageOp]");
 		}
+		
+		return ce;
 	}
 	
 	Statement if_while_statement() throws SyntaxException {

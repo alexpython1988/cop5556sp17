@@ -10,7 +10,7 @@ public class ParamDec extends Dec {
 
 	@Override
 	public String toString() {
-		return "ParamDec [ident=" + ident + ", firstToken=" + firstToken + "]";
+		return "ParamDec [ident=" + ident.getText() + ", firstToken=" + firstToken.getText() + "]";
 	}
 	
 

@@ -2,33 +2,9 @@ package cop5556sp17;
 
 import static cop5556sp17.Scanner.Kind.*;
 import java.util.ArrayList;
-import java.util.List;
 import cop5556sp17.Scanner.Kind;
 import cop5556sp17.Scanner.Token;
-import cop5556sp17.AST.AssignmentStatement;
-import cop5556sp17.AST.BinaryChain;
-import cop5556sp17.AST.BinaryExpression;
-import cop5556sp17.AST.Block;
-import cop5556sp17.AST.BooleanLitExpression;
-import cop5556sp17.AST.Chain;
-import cop5556sp17.AST.ChainElem;
-import cop5556sp17.AST.ConstantExpression;
-import cop5556sp17.AST.Dec;
-import cop5556sp17.AST.Expression;
-import cop5556sp17.AST.FilterOpChain;
-import cop5556sp17.AST.FrameOpChain;
-import cop5556sp17.AST.IdentChain;
-import cop5556sp17.AST.IdentExpression;
-import cop5556sp17.AST.IdentLValue;
-import cop5556sp17.AST.IfStatement;
-import cop5556sp17.AST.ImageOpChain;
-import cop5556sp17.AST.IntLitExpression;
-import cop5556sp17.AST.ParamDec;
-import cop5556sp17.AST.Program;
-import cop5556sp17.AST.SleepStatement;
-import cop5556sp17.AST.Statement;
-import cop5556sp17.AST.Tuple;
-import cop5556sp17.AST.WhileStatement;
+import cop5556sp17.AST.*;
 
 /*
 grammar for LL(2) parser design:
@@ -61,35 +37,36 @@ done		pass		strongOp ::= TIMES | DIV | AND | MOD
 Based on the design, we can find the predict is not unique so it is not a LL(1)
 
 abstract syntax:
-Program::= List<ParamDec> Block
-ParamDec::= type ident
-Block::= List<Dec>  List<Statement>
-Dec::= type ident
-Statement::= SleepStatement | WhileStatement | IfStatement | Chain
-      	| AssignmentStatement
-SleepStatement::= Expression
-AssignmentStatement::= IdentLValue Expression
-Chain::= ChainElem | BinaryChain
-ChainElem ::= IdentChain | FilterOpChain | FrameOpChain | ImageOpChain
-IdentChain::= ident
-FilterOpChain::= filterOp Tuple
-FrameOpChain::= frameOp Tuple
-ImageOpChain::= imageOp Tuple
-BinaryChain::= Chain (arrow | bararrow)  ChainElem
-WhileStatement::= Expression Block
-IfStatement::= Expression Block
-Expression::= IdentExpression | IntLitExpression | BooleanLitExpression
-  	| ConstantExpression | BinaryExpression
-IdentExpression::= ident
-IdentLValue::= ident
-IntLitExpression::= intLit
-BooleanLitExpression::= booleanLiteral
-ConstantExpression::= screenWidth | screenHeight
-BinaryExpression::= Expression op Expression
-Tuple ::=List<Expression>
-	op::= relOp | weakOp | strongOp
-type::= integer | image | frame | file | boolean | url
-	 */
+
+	Program::= List<ParamDec> Block
+	ParamDec::= type ident
+	Block::= List<Dec>  List<Statement>
+	Dec::= type ident
+	Statement::= SleepStatement | WhileStatement | IfStatement | Chain
+      		| AssignmentStatement
+	SleepStatement::= Expression
+	AssignmentStatement::= IdentLValue Expression
+	Chain::= ChainElem | BinaryChain
+	ChainElem ::= IdentChain | FilterOpChain | FrameOpChain | ImageOpChain
+	IdentChain::= ident
+	FilterOpChain::= filterOp Tuple
+	FrameOpChain::= frameOp Tuple
+	ImageOpChain::= imageOp Tuple
+	BinaryChain::= Chain (arrow | bararrow)  ChainElem
+	WhileStatement::= Expression Block
+	IfStatement::= Expression Block
+	Expression::= IdentExpression | IntLitExpression | BooleanLitExpression
+  		| ConstantExpression | BinaryExpression
+	IdentExpression::= ident
+	IdentLValue::= ident
+	IntLitExpression::= intLit
+	BooleanLitExpression::= booleanLiteral
+	ConstantExpression::= screenWidth | screenHeight
+	BinaryExpression::= Expression op Expression
+	Tuple ::=List<Expression>
+		op::= relOp | weakOp | strongOp
+	type::= integer | image | frame | file | boolean | url
+*/
 
 public class Parser {
 
@@ -299,8 +276,9 @@ public class Parser {
 	}
 	
 	/* Important!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 * In functions paramDec(), dec() and assign(), use cosume() method instead of match in real production
-	 * match() is unnecessary for double safety check and slow down the parser speed
+	 * In functions paramDec(), dec() and assign() 
+	 * use cosume() method to replace the first match() method in real production
+	 * match() is unnecessary for double safety check 
 	 * use match here is only aimed for pass the course test 
 	 */
 	

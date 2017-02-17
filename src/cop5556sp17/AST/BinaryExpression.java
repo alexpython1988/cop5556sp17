@@ -80,7 +80,7 @@ public class BinaryExpression extends Expression {
 	
 	@Override
 	public Object visit(ASTVisitor v, Object arg) throws Exception {
-		return v.visitBinaryExpression(this,arg);
+		return v.visitBinaryExpression(this, arg);
 	}
 
 }

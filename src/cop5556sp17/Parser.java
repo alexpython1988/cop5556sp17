@@ -1,45 +1,29 @@
 package cop5556sp17;
 
-import cop5556sp17.Scanner.Kind;
 import static cop5556sp17.Scanner.Kind.*;
-
-import cop5556sp17.AST.ASTNode;
+import java.util.ArrayList;
+import java.util.List;
+import cop5556sp17.Scanner.Kind;
 import cop5556sp17.Scanner.Token;
+import cop5556sp17.AST.AssignmentStatement;
+import cop5556sp17.AST.BinaryExpression;
+import cop5556sp17.AST.Block;
+import cop5556sp17.AST.BooleanLitExpression;
+import cop5556sp17.AST.Chain;
+import cop5556sp17.AST.ConstantExpression;
+import cop5556sp17.AST.Dec;
+import cop5556sp17.AST.Expression;
+import cop5556sp17.AST.IdentExpression;
+import cop5556sp17.AST.IdentLValue;
+import cop5556sp17.AST.IfStatement;
+import cop5556sp17.AST.IntLitExpression;
+import cop5556sp17.AST.ParamDec;
+import cop5556sp17.AST.Program;
+import cop5556sp17.AST.SleepStatement;
+import cop5556sp17.AST.Statement;
+import cop5556sp17.AST.Tuple;
+import cop5556sp17.AST.WhileStatement;
 
-public class Parser {
-
-	/**
-	 * Exception to be thrown if a syntax error is detected in the input.
-	 * You will want to provide a useful error message.
-	 *
-	 */
-	@SuppressWarnings("serial")
-	public static class SyntaxException extends Exception {
-		public SyntaxException(String message) {
-			super(message);
-		}
-	}
-
-	Scanner scanner;
-	Token t;
-
-	Parser(Scanner scanner) {
-		this.scanner = scanner;
-		t = scanner.nextToken();
-	}
-
-	/**
-	 * parse the input using tokens from the scanner.
-	 * Check for EOF (i.e. no trailing junk) when finished
-	 * 
-	 * @throws SyntaxException
-	 */
-	void parse() throws SyntaxException {
-		program();
-		matchEOF();
-		return;
-	}
-	
 /*
 grammar for LL(2) parser design:
 
@@ -69,75 +53,154 @@ done		pass		weakOp  ::= PLUS | MINUS | OR
 done		pass		strongOp ::= TIMES | DIV | AND | MOD 
 
 Based on the design, we can find the predict is not unique so it is not a LL(1)
+
+abstract syntax:
+Program::= List<ParamDec> Block
+ParamDec::= type ident
+Block::= List<Dec>  List<Statement>
+Dec::= type ident
+Statement::= SleepStatement | WhileStatement | IfStatement | Chain
+      	| AssignmentStatement
+SleepStatement::= Expression
+AssignmentStatement::= IdentLValue Expression
+Chain::= ChainElem | BinaryChain
+ChainElem ::= IdentChain | FilterOpChain | FrameOpChain | ImageOpChain
+IdentChain::= ident
+FilterOpChain::= filterOp Tuple
+FrameOpChain::= frameOp Tuple
+ImageOpChain::= imageOp Tuple
+BinaryChain::= Chain (arrow | bararrow)  ChainElem
+WhileStatement::= Expression Block
+IfStatement::= Expression Block
+Expression::= IdentExpression | IntLitExpression | BooleanLitExpression
+  	| ConstantExpression | BinaryExpression
+IdentExpression::= ident
+IdentLValue::= ident
+IntLitExpression::= intLit
+BooleanLitExpression::= booleanLiteral
+ConstantExpression::= screenWidth | screenHeight
+BinaryExpression::= Expression op Expression
+Tuple ::=List<Expression>
+	op::= relOp | weakOp | strongOp
+type::= integer | image | frame | file | boolean | url
 	 */
+
+public class Parser {
+
+	/**
+	 * Exception to be thrown if a syntax error is detected in the input.
+	 * You will want to provide a useful error message.
+	 *
+	 */
+	@SuppressWarnings("serial")
+	public static class SyntaxException extends Exception {
+		public SyntaxException(String message) {
+			super(message);
+		}
+	}
+
+	Scanner scanner;
+	Token t;
+
+	Parser(Scanner scanner) {
+		this.scanner = scanner;
+		t = scanner.nextToken();
+	}
+
+	/**
+	 * parse the input using tokens from the scanner.
+	 * Check for EOF (i.e. no trailing junk) when finished
+	 * 
+	 * @throws SyntaxException
+	 */
+	Program parse() throws SyntaxException {
+		Program p = program();
+		matchEOF();
+		return p;
+	}
 	
-//	expression ::= term ( relOp term)*
-	ASTNode expression() throws SyntaxException {
+	Expression expression() throws SyntaxException {
 		//TODO
 		//System.out.println("expr");
-		term();
+		Expression e0 = null;
+		Expression e1 = null;
+		Token firstToken = t;
+		e0 = term();
 		while(relOp(t)){
+			Token op = t;
 			consume();
-			term();
+			e1 = term();
+			e0 = new BinaryExpression(firstToken, e0, op, e1);
 		}
 		
-		return null;
+		return e0;
 	}
 
-//	term ::= elem ( weakOp  elem)*
-	void term() throws SyntaxException {
+	Expression term() throws SyntaxException {
 		//TODO
 		//System.out.println("term");
-		elem();
+		Expression e0 = null;
+		Expression e1 = null;
+		Token firstToken = t;
+		e0 = elem();
 		while(weakOp(t)){
+			Token op = t;
 			consume();
-			elem();
+			e1 = elem();
+			e0 = new BinaryExpression(firstToken, e0, op, e1);
 		}
+		
+		return e0;
 	}
 
-//	elem ::= factor ( strongOp factor)*
-	void elem() throws SyntaxException {
+	Expression elem() throws SyntaxException {
 		//TODO
 		//System.out.println("elem");
-		factor();
+		Expression e0 = null;
+		Expression e1 = null;
+		Token firstToken = t;
+		e0 = factor();
 		
 		while(strongOp(t)){
+			Token op = t;
 			consume();
-			factor();
+			e1 = factor();
+			e0 = new BinaryExpression(firstToken, e0, op, e1);
 		}
+		
+		return e0;
 	}
 
-//	factor ::= IDENT | INT_LIT | KW_TRUE | KW_FALSE
-//	       	| KW_SCREENWIDTH | KW_SCREENHEIGHT | ( expression )
-	void factor() throws SyntaxException {
+	Expression factor() throws SyntaxException {
+		Expression e = null;
 		//System.out.println("factor");
 		Kind kind = t.kind;
 		switch (kind) {
 		case IDENT: {
-			consume();
+			e = new IdentExpression(consume());
 		}
 			break;
 		
 		case INT_LIT: {
-			consume();
+			e = new IntLitExpression(consume());
 		}
 			break;
 		
 		case KW_TRUE:
 		case KW_FALSE: {
-			consume();
+			e = new BooleanLitExpression(consume());
 		}
 			break;
 		
 		case KW_SCREENWIDTH:
 		case KW_SCREENHEIGHT: {
-			consume();
+			e = new ConstantExpression(consume());
 		}
 			break;
 		
 		case LPAREN: {
 			consume();
-			expression();
+			e = expression();
 			match(RPAREN);
 		}
 			break;
@@ -148,19 +211,24 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 					". The illegal toke is at " + scanner.getLinePos(t) + 
 					" expected one of [IDENT,INT_LIT,KW_TRUE,KW_FALSE,KW_SCREENWIDTH,KW_SCREENHEIGHT,LPARENT");
 		}
+		
+		return e;
 	}
 
-//  block ::= { ( dec | statement) * }
-	void block() throws SyntaxException {
+	Block block() throws SyntaxException {
 		//TODO
 		//System.out.println("block");
-		match(LBRACE);
+		ArrayList<Dec> decs = new ArrayList<Dec>();
+		ArrayList<Statement> statements = new ArrayList<Statement>();
+		
+		Token firstToken = match(LBRACE);
+		//Token firstToken = t;
 		while(true){
 			if(isDec(t)){
-				dec();
+				decs.add(dec());
 				continue;
 			}else if(isStatement(t)){
-				statement();
+				statements.add(statement());
 				continue;
 			}else{
 				break;
@@ -168,6 +236,8 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		}
 		
 		match(RBRACE);
+		
+		return new Block(firstToken, decs, statements);
 	}
 	
 	/*
@@ -185,16 +255,17 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 					|| t.isKind(KW_FRAME));
 		}
 
-//	program ::=  IDENT block
-//	program ::=  IDENT param_dec ( , param_dec )*   block
-	void program() throws SyntaxException {
+	Program program() throws SyntaxException {
 		//TODO
 		//System.out.println("program");
-		match(IDENT);
+		Program p = null;
+		Token firstToken = match(IDENT);
+		ArrayList<ParamDec> paramList = new ArrayList<ParamDec>();
+		
 		Kind kind = t.kind;
 		switch (kind) {
 		case LBRACE:{
-			block();
+			p = new Program(firstToken, null, block());
 		}
 			break;
 		
@@ -203,13 +274,13 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		case KW_INTEGER:
 		case KW_BOOLEAN:{
 			//System.out.println(t.kind);
-			paramDec();
+			paramList.add(paramDec());
 			while(t.isKind(COMMA)){
 				consume();
 				//System.out.println(t.kind);
-				paramDec();
+				paramList.add(paramDec());
 			}
-			block();
+			p = new Program(firstToken, paramList, block());
 		}
 			break;
 
@@ -217,6 +288,8 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) +
 					". Saw " + kind + " expected one from [LBRACE, KW_URL, KW_FILE, KW_INTEGER, KW_BOOLEAN]");
 		}
+		
+		return p;
 	}
 	
 	/* Important!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -225,50 +298,52 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 	 * use match here is only aimed for pass the course test 
 	 */
 	
-//  param_dec ::= ( KW_URL | KW_FILE | KW_INTEGER | KW_BOOLEAN)   IDENT
-	void paramDec() throws SyntaxException {
+	ParamDec paramDec() throws SyntaxException {
 		//TODO
 		//System.out.println("parmdec");
-		match(KW_URL, KW_FILE, KW_INTEGER, KW_BOOLEAN);
-		match(IDENT);
+		Token firstToken = match(KW_URL, KW_FILE, KW_INTEGER, KW_BOOLEAN);
+		Token ident = match(IDENT);
+		return new ParamDec(firstToken, ident);
 	}
 
-//	dec ::= (  KW_INTEGER | KW_BOOLEAN | KW_IMAGE | KW_FRAME)    IDENT
-	void dec() throws SyntaxException {
+	Dec dec() throws SyntaxException {
 		//TODO
 		//System.out.println("dec");
 //		consume();
-		match(KW_INTEGER, KW_BOOLEAN, KW_IMAGE, KW_FRAME);
-		match(IDENT);
+		Token firstToken = match(KW_INTEGER, KW_BOOLEAN, KW_IMAGE, KW_FRAME);
+		Token ident = match(IDENT);
+		
+		return new Dec(firstToken, ident);
 	}
 
-//	statement ::=   OP_SLEEP expression ; | whileStatement | ifStatement | chain ; | assign ;
-	void statement() throws SyntaxException {
+	Statement statement() throws SyntaxException {
 		//TODO
 		//System.out.println("statement");
+		Statement statment  = null;
 		Kind kind = t.kind;
 		Token nextToken = scanner.peek(); //nextToken = t.next
 		
 		switch (kind) {
 		case OP_SLEEP:{
-			consume();
-			expression();
+			Token firstToken = consume();
+			Expression e = expression();
 			match(SEMI);
+			statment = new SleepStatement(firstToken, e);
 		}
 			break;
 		
 		case KW_WHILE:
 		case KW_IF:{
-			if_while_statement();
+			statment = if_while_statement();
 		}
 			break;
 			
 		case IDENT:{
 			if(nextToken.isKind(ASSIGN)){
-				assign();
+				statment = assign();
 				match(SEMI);
 			}else if(arrowOp(nextToken)){
-				chain();
+				statment = chain();
 				match(SEMI);
 			}else{
 				throw new SyntaxException("illegal factor in statement saw " + nextToken.kind + 
@@ -298,10 +373,11 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 			throw new SyntaxException("illegal factor: " + kind + 
 					". The illegal token is at " + scanner.getLinePos(t));
 		}
+		
+		return statment;
 	}
 
-//	chain ::=  chainElem arrowOp chainElem ( arrowOp  chainElem)*
-	void chain() throws SyntaxException {
+	Chain chain() throws SyntaxException {
 		//TODO
 		//System.out.println("chain");
 		chainElem();
@@ -311,19 +387,22 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 			consume();
 			chainElem();
 		}
+		
+		return null;
 	}
 	
-//	assign ::= IDENT ASSIGN expression
-	void assign() throws SyntaxException {
+	AssignmentStatement assign() throws SyntaxException {
 		//TODO
 		//System.out.println("assign");
 //		consume();
-		match(IDENT);
+		Token firstToken = match(IDENT);
+		IdentLValue var = new IdentLValue(firstToken);
 		match(ASSIGN);
-		expression();
+		Expression e = expression();
+		
+		return new AssignmentStatement(firstToken, var, e);
 	}
 	
-//	chainElem ::= IDENT | filterOp arg | frameOp arg | imageOp arg
 	void chainElem() throws SyntaxException {
 		//TODO
 		//System.out.println("chainElem");
@@ -338,28 +417,35 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 		}
 	}
 	
-//	ifStatement ::= KW_IF ( expression ) block
-//	whileStatement ::= KW_WHILE ( expression ) block
-	void if_while_statement() throws SyntaxException {
+	Statement if_while_statement() throws SyntaxException {
 		//TODO
 		//System.out.println("if_while");
-		consume();
+		Token firstToken = consume();
+		
 		match(LPAREN);
-		expression();
+		Expression e = expression();
 		match(RPAREN);
-		block();
+		Block b = block();
+		
+		if(firstToken.isKind(KW_IF)){
+			return new IfStatement(firstToken, e, b);
+		}else{
+			return new WhileStatement(firstToken, e, b);
+		}
 	}
 
-//	arg ::= epsil | ( expression (,expression)* )
-	void arg() throws SyntaxException {
+	Tuple arg() throws SyntaxException {
 		//TODO
 		//System.out.println("arg");
+		Token firstToken = null;
+		ArrayList<Expression> tuples = new ArrayList<Expression>();
+		
 		if(t.isKind(LPAREN)){
-			consume();
-			expression();
+			firstToken = consume();
+			tuples.add(expression());
 			while(t.isKind(COMMA)){
 				consume();
-				expression();
+				tuples.add(expression());
 			}
 			match(RPAREN);
 //		}else if(t.isKind(SEMI) || arrowOp(t)){
@@ -368,6 +454,9 @@ Based on the design, we can find the predict is not unique so it is not a LL(1)
 //			throw new SyntaxException("The illegal token is at " + scanner.getLinePos(t) + 
 //					" saw " + t.kind + " expected [LPAREN, SEMI, ARROW, BARARROW]");
 		}
+		
+		
+		return new Tuple(firstToken, tuples);
 		
 //		match(LPAREN);
 //		expression();

@@ -273,23 +273,71 @@ public class ASTTest {
 	
 	@Test
 	public void testStatmentChain0() throws IllegalCharException, IllegalNumberException, SyntaxException {
-		String input = ";";
+		String input = "abc -> a123;";
 		Scanner scanner = new Scanner(input);
 		scanner.scan();
 		Parser parser = new Parser(scanner);
 		ASTNode ast = parser.statement();
-		assertEquals(Chain.class, ast.getClass());
+		assertEquals(BinaryChain.class, ast.getClass());
 		
-		
+		BinaryChain bc = (BinaryChain) ast;
+		ChainElem ce = (ChainElem) bc.getE0();
+		System.out.println(ce.getFirstToken().getText());
+		System.out.println(bc.getArrow().getText());
+		IdentChain ce1 = (IdentChain) bc.getE1();
+		System.out.println(bc.getE1().getClass());
+		System.out.println(ce1.getFirstToken().getText());
 	}
 	
+	@Test
+	public void testStatmentChain1() throws IllegalCharException, IllegalNumberException, SyntaxException {
+		String input = "abc -> gray |-> _abc1 -> hide (abc,123) -> scale ;";
+		Scanner scanner = new Scanner(input);
+		scanner.scan();
+		Parser parser = new Parser(scanner);
+		ASTNode ast = parser.statement();
+		assertEquals(BinaryChain.class, ast.getClass());
+		
+		BinaryChain bc0 = (BinaryChain) ast;
+		BinaryChain bc1 = (BinaryChain) bc0.getE0();
+		BinaryChain bc2 = (BinaryChain) bc1.getE0();
+		BinaryChain bc3 = (BinaryChain) bc2.getE0();
+		
+		System.out.println(bc3.getE0().getClass());
+		System.out.println(bc3.getArrow().getText());
+		System.out.println(bc3.getE1().getClass());
+		
+		System.out.println(bc2.getArrow().getText());
+		System.out.println(bc2.getE1().getClass());
+
+		System.out.println(bc1.getArrow().getText());
+		System.out.println(bc1.getE1().getClass());
+		FrameOpChain foc = (FrameOpChain) bc1.getE1();
+		Tuple t = foc.getArg();
+		List<Expression> list = t.getExprList();
+		IdentExpression ie1 = (IdentExpression) list.get(0);
+		IntLitExpression ie2 = (IntLitExpression) list.get(1);
+		System.out.println(ie1.getFirstToken().getText());
+		System.out.println(ie2.getFirstToken().getText());
+		System.out.println(bc0.getArrow().getText());
+		System.out.println(bc0.getE1().getClass());
+	}
 	
-	
-	
-	
-	
-	
-	
+	@Test
+	public void testBlock0() throws IllegalCharException, IllegalNumberException, SyntaxException {
+		//String input = "{}";
+		String input = "{integer r0 integer r1 r0 <-12; r1 <- 34;\n"
+						+ "xloc (screenwidth|(r0), screenheight&(r1))"
+						+ " -> yloc(screenwidth+(r1), screenheight*(r0)) |-> convolve;}";
+		Scanner scanner = new Scanner(input);
+		scanner.scan();
+		Parser parser = new Parser(scanner);
+		ASTNode ast = parser.block();
+		assertEquals(Block.class, ast.getClass());
+		
+		Block b = (Block) ast;
+		System.out.println(b);
+	}
 	
 	
 }

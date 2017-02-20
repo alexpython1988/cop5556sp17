@@ -9,7 +9,7 @@ This is a course project aiming to construct a compiler for a dummy language usi
 !!!more desc here!!!
 
 ### How do I get set up? ###
-You need java 8 or higher version
+java 8 or higher version. No external .jar required. Directly import the project into eclipse as exist project.
 
 ### Contribution guidelines ###
 Author: Xi Yang

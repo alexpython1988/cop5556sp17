@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cop5556sp17.Scanner.Kind;
-
 public class Scanner {
 	/**
 	 * Kind enum
@@ -165,6 +163,47 @@ public class Scanner {
 			return this.kind.equals(kind);
 		}
 
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((kind == null) ? 0 : kind.hashCode());
+			result = prime * result + length;
+			result = prime * result + pos;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof Token)) {
+				return false;
+			}
+			Token other = (Token) obj;
+			if (!getOuterType().equals(other.getOuterType())) {
+				return false;
+			}
+			if (kind != other.kind) {
+				return false;
+			}
+			if (length != other.length) {
+				return false;
+			}
+			if (pos != other.pos) {
+				return false;
+			}
+			return true;
+		}
+
+		private Scanner getOuterType() {
+			return Scanner.this;
+		}
 	}
 
 	

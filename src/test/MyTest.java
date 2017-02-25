@@ -15,6 +15,16 @@ import cop5556sp17.Scanner.Kind;
 
 public class MyTest {
 	
+	@Test
+	public void testSep(){
+		int i = 1;
+		int j = 2;
+		
+		int c = i++ + j++;
+		System.out.println(c +i+j +"");
+		System.out.println(c +""+i+j );
+		System.out.println(c +i+""+j );
+	}
 	
 	@Test
 	public void testDotArgs(){

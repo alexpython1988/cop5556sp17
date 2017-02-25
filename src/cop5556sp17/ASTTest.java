@@ -3,6 +3,7 @@ package cop5556sp17;
 import static cop5556sp17.Scanner.Kind.*;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Rule;
@@ -338,6 +339,5 @@ public class ASTTest {
 		Block b = (Block) ast;
 		System.out.println(b);
 	}
-	
 	
 }

@@ -24,7 +24,7 @@ public class AssignmentStatement extends Statement {
 	
 	@Override
 	public String toString() {
-		return "AssignStatement [e=" + e + ", firstToken=" + firstToken.getText() + "]";
+		return "AssignStatement [e=" + e + ", firstToken=" + firstToken + "]";
 	}
 	
 	

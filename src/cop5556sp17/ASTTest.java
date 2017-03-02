@@ -343,7 +343,7 @@ public class ASTTest {
 	@Test
 	public void testP() throws IllegalCharException, IllegalNumberException, SyntaxException {
 		//String input = "{}";
-		String input = "program {}";
+		String input = "abc\n{integer x\nif(true){integer x}\n}";
 		Scanner scanner = new Scanner(input);
 		scanner.scan();
 		Parser parser = new Parser(scanner);

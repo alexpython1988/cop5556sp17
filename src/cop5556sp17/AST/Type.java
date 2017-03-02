@@ -6,7 +6,6 @@ import cop5556sp17.Scanner.Token;
 
 public class Type  {
 	
-
 	public static TypeName getTypeName(Token token) throws SyntaxException{
 		switch (token.kind){
 		case KW_INTEGER: {return TypeName.INTEGER;} 
@@ -34,5 +33,12 @@ public class Type  {
 			}
 			return false;
 		}
-}
+		
+		public boolean isType(TypeName type){
+			if (type.equals(this)) 
+				return true;
+			else
+				return false;
+		}
+	}
 }

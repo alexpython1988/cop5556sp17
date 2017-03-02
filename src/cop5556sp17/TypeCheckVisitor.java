@@ -34,17 +34,6 @@ import cop5556sp17.Scanner.Kind;
 import cop5556sp17.Scanner.LinePos;
 import cop5556sp17.Scanner.Token;
 import static cop5556sp17.AST.Type.TypeName.*;
-import static cop5556sp17.Scanner.Kind.ARROW;
-import static cop5556sp17.Scanner.Kind.KW_HIDE;
-import static cop5556sp17.Scanner.Kind.KW_MOVE;
-import static cop5556sp17.Scanner.Kind.KW_SHOW;
-import static cop5556sp17.Scanner.Kind.KW_XLOC;
-import static cop5556sp17.Scanner.Kind.KW_YLOC;
-import static cop5556sp17.Scanner.Kind.OP_BLUR;
-import static cop5556sp17.Scanner.Kind.OP_CONVOLVE;
-import static cop5556sp17.Scanner.Kind.OP_GRAY;
-import static cop5556sp17.Scanner.Kind.OP_HEIGHT;
-import static cop5556sp17.Scanner.Kind.OP_WIDTH;
 import static cop5556sp17.Scanner.Kind.*;
 
 public class TypeCheckVisitor implements ASTVisitor {

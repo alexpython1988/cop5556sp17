@@ -341,6 +341,20 @@ public class ASTTest {
 	}
 	
 	@Test
+	public void testP() throws IllegalCharException, IllegalNumberException, SyntaxException {
+		//String input = "{}";
+		String input = "abc\n{integer x\nif(true){integer x}\n}";
+		Scanner scanner = new Scanner(input);
+		scanner.scan();
+		Parser parser = new Parser(scanner);
+		ASTNode ast = parser.parse();
+		assertEquals(Program.class, ast.getClass());
+		
+		Program p = (Program) ast;
+		System.out.println(p);
+	}
+	
+
 	public void testFactor04() throws IllegalCharException, IllegalNumberException, SyntaxException {
 		String input = "abc";
 		Scanner scanner = new Scanner(input);
@@ -602,5 +616,5 @@ public class ASTTest {
 		SleepStatement is = (SleepStatement) ast;
 		assertEquals(BinaryExpression.class, is.getE().getClass());
 	}
-	
+
 }

@@ -248,7 +248,7 @@ public class Parser {
 		Kind kind = t.kind;
 		switch (kind) {
 		case LBRACE:{
-			p = new Program(firstToken, null, block());
+			p = new Program(firstToken, paramList, block());
 		}
 			break;
 		

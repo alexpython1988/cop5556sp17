@@ -339,5 +339,19 @@ public class ASTTest {
 		System.out.println(b);
 	}
 	
+	@Test
+	public void testP() throws IllegalCharException, IllegalNumberException, SyntaxException {
+		//String input = "{}";
+		String input = "program {}";
+		Scanner scanner = new Scanner(input);
+		scanner.scan();
+		Parser parser = new Parser(scanner);
+		ASTNode ast = parser.parse();
+		assertEquals(Program.class, ast.getClass());
+		
+		Program p = (Program) ast;
+		System.out.println(p);
+	}
+	
 	
 }

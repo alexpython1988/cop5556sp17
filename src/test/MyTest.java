@@ -5,15 +5,69 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.junit.Test;
 
 import cop5556sp17.Scanner.Kind;
+import cop5556sp17.AST.Type.TypeName;
 
 public class MyTest {
+	@Test
+	public void testtable(){
+		Hashtable<String, Map<String, String>> ht = new Hashtable<String, Map<String, String>>();
+		HashMap<String, String> hm1 = new HashMap<String, String>(); 
+		hm1.put("hm11", "hm11a");
+		hm1.put("hm12", "hm12a");
+		HashMap<String, String> hm2 = new HashMap<String, String>(); 
+		hm2.put("hm21", "hm21a");
+		hm2.put("hm22", "hm22a");
+		HashMap<String, String> hm3 = new HashMap<String, String>(); 
+		hm3.put("hm31", "hm31a");
+		hm3.put("hm32", "hm32a");
+		ht.put("t1", hm1);
+		ht.put("t2", hm2);
+		
+		if(ht.containsKey("t1")){
+			
+		}
+		
+		System.out.println(ht);
+	}
+	
+	@Test
+	public void testprint(){
+		System.out.println(TypeName.FILE);
+		Stack<Integer> st = new Stack<Integer>();
+		
+		int j = 0;
+		
+		for(int i = 1; i < 5; i++){
+			j++;
+			st.push(j);
+			
+			System.out.println(st.peek());
+			
+			
+		}
+		System.out.println();
+		
+		for(int i = 1; i < 5; i++){
+			System.out.println(st.peek());
+			st.pop();
+			j--;
+			//System.out.println(st.peek());
+		}
+		
+		System.out.println();
+		System.out.println(j);
+		System.out.println(st.isEmpty());
+		
+	}
 	
 	@Test
 	public void testSep(){

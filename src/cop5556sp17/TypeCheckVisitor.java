@@ -1,38 +1,9 @@
 package cop5556sp17;
 
-import cop5556sp17.AST.ASTNode;
-import cop5556sp17.AST.ASTVisitor;
-import cop5556sp17.AST.Tuple;
-import cop5556sp17.AST.AssignmentStatement;
-import cop5556sp17.AST.BinaryChain;
-import cop5556sp17.AST.BinaryExpression;
-import cop5556sp17.AST.Block;
-import cop5556sp17.AST.BooleanLitExpression;
-import cop5556sp17.AST.Chain;
-import cop5556sp17.AST.ChainElem;
-import cop5556sp17.AST.ConstantExpression;
-import cop5556sp17.AST.Dec;
-import cop5556sp17.AST.Expression;
-import cop5556sp17.AST.FilterOpChain;
-import cop5556sp17.AST.FrameOpChain;
-import cop5556sp17.AST.IdentChain;
-import cop5556sp17.AST.IdentExpression;
-import cop5556sp17.AST.IdentLValue;
-import cop5556sp17.AST.IfStatement;
-import cop5556sp17.AST.ImageOpChain;
-import cop5556sp17.AST.IntLitExpression;
-import cop5556sp17.AST.ParamDec;
-import cop5556sp17.AST.Program;
-import cop5556sp17.AST.SleepStatement;
-import cop5556sp17.AST.Statement;
+import cop5556sp17.AST.*;
 import cop5556sp17.AST.Type.TypeName;
-import cop5556sp17.AST.WhileStatement;
 
 import java.util.ArrayList;
-
-import cop5556sp17.Scanner.Kind;
-import cop5556sp17.Scanner.LinePos;
-import cop5556sp17.Scanner.Token;
 import static cop5556sp17.AST.Type.TypeName.*;
 import static cop5556sp17.Scanner.Kind.*;
 
@@ -62,6 +33,19 @@ public class TypeCheckVisitor implements ASTVisitor {
 	@Override
 	public Object visitBlock(Block block, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		symtab.enterScope();
+		
+		ArrayList<Dec> decs = block.getDecs();
+		for(Dec dec: decs){
+			dec.visit(this, null);
+		}
+		
+		ArrayList<Statement> stats = block.getStatements();
+		for(Statement stat: stats){
+			stat.visit(this, null);
+		}
+		
+		symtab.leaveScope();
 		return null;
 	}
 
@@ -110,6 +94,10 @@ public class TypeCheckVisitor implements ASTVisitor {
 	@Override
 	public Object visitSleepStatement(SleepStatement sleepStatement, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		TypeName tn = sleepStatement.getE().getTypeName();
+		if(!tn.isType(INTEGER))
+			throw new TypeCheckException("The type in sleep statement should be Integer but get " + 
+											tn);
 		return null;
 	}
 
@@ -122,30 +110,48 @@ public class TypeCheckVisitor implements ASTVisitor {
 	@Override
 	public Object visitDec(Dec declaration, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		symtab.insert(declaration.getIdent().getText(), declaration);
 		return null;
 	}
 
 	@Override
 	public Object visitProgram(Program program, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		ArrayList<ParamDec> list = program.getParams();
+		for(ParamDec pd: list){
+			pd.visit(this, null);
+		}
+		
+		program.getB().visit(this, arg);
+			
 		return null;
 	}
 
 	@Override
 	public Object visitAssignmentStatement(AssignmentStatement assignStatement, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		assignStatement.getVar().visit(this, null);
+		
+		TypeName tni =  assignStatement.getVar().getDec().getTypeName();
+		TypeName tne =  assignStatement.getE().getTypeName();
+		if(!tni.equals(tne))
+			throw new TypeCheckException("The type of identVar is " + tni + " and the type of expression is" + tne);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitIdentLValue(IdentLValue identX, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		int currentScope = symtab.getCurrentScope();
+		symtab.lookup(identX.getText());
 		return null;
 	}
 
 	@Override
 	public Object visitParamDec(ParamDec paramDec, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		symtab.insert(paramDec.getIdent().getText(), paramDec);
 		return null;
 	}
 

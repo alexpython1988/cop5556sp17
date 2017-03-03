@@ -14,7 +14,8 @@ public class Type  {
 		case KW_FRAME: {return TypeName.FRAME;} 
 		case KW_URL: {return TypeName.URL;} 
 		case KW_FILE: {return TypeName.FILE;} 
-		default: throw new Parser.SyntaxException("illegal type");
+		default: throw new Parser.SyntaxException("illegal type, expected [Integer, Boolean, Image, "
+				+ "Frame, URL, File], but get " + token.kind);
 		}		
 	}
 

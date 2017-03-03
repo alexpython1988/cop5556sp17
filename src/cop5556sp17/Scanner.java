@@ -141,7 +141,7 @@ public class Scanner {
 			return new LinePos(FindLineNumber(pos), pos - startPosForEachLine.get(FindLineNumber(pos)));
 		}
 
-		Token(Kind kind, int pos, int length) {
+		public Token(Kind kind, int pos, int length) {
 			this.kind = kind;
 			this.pos = pos;
 			this.length = length;

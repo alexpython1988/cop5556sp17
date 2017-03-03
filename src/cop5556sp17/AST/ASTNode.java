@@ -47,7 +47,5 @@ public abstract class ASTNode {
 
 	public abstract Object visit(ASTVisitor v, Object arg) throws Exception;
 
-
-
 }
 

@@ -27,8 +27,6 @@ public class AssignmentStatement extends Statement {
 		return "AssignStatement [e=" + e + ", firstToken=" + firstToken + "]";
 	}
 	
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

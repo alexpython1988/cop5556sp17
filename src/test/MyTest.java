@@ -6,9 +6,11 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 
 import org.junit.Test;
@@ -17,6 +19,17 @@ import cop5556sp17.Scanner.Kind;
 import cop5556sp17.AST.Type.TypeName;
 
 public class MyTest {
+	
+	@Test
+	public void testStack(){
+		Stack<Integer> st = new  Stack<Integer>();
+		st.push(1);
+		st.push(2);
+		st.push(3);
+		st.push(4);
+		
+		System.out.println(st.search(3));
+	}
 	
     @Test
     public void testprintframe(){
@@ -56,8 +69,17 @@ public class MyTest {
 //			System.out.println(l1.get(i).get("scope"));
 //		}
 		
-		for(Map<String, Object> each: l1){
-			System.out.println(each.get("typename"));
+//		for(Map<String, Object> each: l1){
+//			System.out.println(each.get("typename"));
+//		}
+		
+		Iterator<Entry<String, LinkedList<Map<String, Object>>>> itr = v.entrySet().iterator();
+		while(itr.hasNext()){
+			Entry<String, LinkedList<Map<String, Object>>> en =  itr.next();
+			String name = en.getKey();
+			for(Map<String, Object> m :en.getValue()){
+				System.out.println(name + "\t\t" + m);
+			}
 		}
 	}
 	

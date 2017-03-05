@@ -1,5 +1,6 @@
 package cop5556sp17;
 
+import cop5556sp17.Scanner.Kind;
 import cop5556sp17.AST.*;
 import cop5556sp17.AST.Type.TypeName;
 
@@ -21,12 +22,19 @@ public class TypeCheckVisitor implements ASTVisitor {
 	@Override
 	public Object visitBinaryChain(BinaryChain binaryChain, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
 	@Override
 	public Object visitBinaryExpression(BinaryExpression binaryExpression, Object arg) throws Exception {
 		// TODO Auto-generated method stub
+		Object t0 = binaryExpression.getE0().visit(this, null);
+		Kind op_kind = binaryExpression.getOp().kind;
+		Object t1 = binaryExpression.getE1().visit(this, null);
+		
+		
+		
 		return null;
 	}
 

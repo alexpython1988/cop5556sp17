@@ -18,6 +18,11 @@ import cop5556sp17.AST.Type.TypeName;
 
 public class MyTest {
 	
+    @Test
+    public void testprintframe(){
+    	System.out.println("a \t b \t c \t d \ne \t f \t h\t m");
+    }
+	
 	@Test
 	public void testtypename1(){
 		Hashtable<String, LinkedList<Map<String, Object>>> v = new Hashtable<>();

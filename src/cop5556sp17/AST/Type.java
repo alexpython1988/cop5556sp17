@@ -20,13 +20,23 @@ public class Type  {
 	}
 
 	public static enum TypeName {
-		INTEGER, 
-		BOOLEAN, 
-		IMAGE, 
-		FRAME,
-	    URL, 
-	    FILE, 
-	    NONE;
+		INTEGER("tn_integer"), 
+		BOOLEAN("tn_boolean"), 
+		IMAGE("tn_image"), 
+		FRAME("tn_frame"),
+	    URL("tn_url"), 
+	    FILE("tn_file"), 
+	    NONE("tn_none");
+		
+		final String text;
+
+		public String getText() {
+			return text;
+		}
+		
+		TypeName(String text){
+			this.text = text;
+		}
 		
 		public boolean isType(TypeName... types){
 			for (TypeName type: types){

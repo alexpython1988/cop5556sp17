@@ -17,6 +17,93 @@ import cop5556sp17.Scanner.Kind;
 import cop5556sp17.AST.Type.TypeName;
 
 public class MyTest {
+	
+	@Test
+	public void testtypename1(){
+		Hashtable<String, LinkedList<Map<String, Object>>> v = new Hashtable<>();
+		LinkedList<Map<String, Object>> ll = new LinkedList<Map<String, Object>>();
+		
+		Map<String, Object> a = new HashMap<String, Object>();
+		a.put("scope", 1);
+		a.put("typename", TypeName.IMAGE);
+		Map<String, Object> a1 = new HashMap<String, Object>();
+		a1.put("scope", 2);
+		a1.put("typename", TypeName.INTEGER);
+		Map<String, Object> a2 = new HashMap<String, Object>();
+		a2.put("scope", 2);
+		a2.put("typename", TypeName.BOOLEAN);
+		
+		ll.add(a1);
+		ll.add(a);
+		ll.add(a2);
+		
+		v.put("t", ll);
+		
+		
+		ll = new LinkedList<Map<String, Object>>();
+		ll.add(a);
+		v.put("t1",ll);
+		
+		System.out.println(v);
+		
+		LinkedList<Map<String, Object>> l1 = v.get("t");
+//		for(int i = 0; i < l1.size(); i++){
+//			System.out.println(l1.get(i).get("scope"));
+//		}
+		
+		for(Map<String, Object> each: l1){
+			System.out.println(each.get("typename"));
+		}
+	}
+	
+	@Test
+	public void testtypename(){
+		//System.out.println(TypeName.BOOLEAN.getText());
+		//String str = "t_url";
+		Hashtable<String, Map<String, Object>> v = new Hashtable<>();
+		Map<String, Object> a = new HashMap<String, Object>();
+		a.put("scope", 1);
+		a.put("typename", TypeName.IMAGE);
+		Map<String, Object> a1 = new HashMap<String, Object>();
+		a1.put("scope", 2);
+		a1.put("typename", TypeName.INTEGER);
+		
+		v.put("v1", a);
+		v.put("v1", a1);
+		v.put("v2", a1);
+		
+		System.out.println(v);
+		
+		
+		int i = (int) v.get("v2").get("scope");
+		TypeName tn = (TypeName) v.get("v1").get("typename");
+		System.out.println(i);
+		System.out.println(tn);
+
+		//System.out.println(v.get("a1").get("scope"));
+		//System.out.println(v.get("a1").get("typename"));
+	}
+	
+	static enum TypeName {
+		INTEGER("t_integer"), 
+		BOOLEAN("t_boolean"), 
+		IMAGE("t_image"), 
+		FRAME("t_frame"),
+	    URL("t_url"), 
+	    FILE("t_file"), 
+	    NONE("t_none");
+		
+		final String text;
+
+		public String getText() {
+			return text;
+		}
+		
+		TypeName(String text){
+			this.text = text;
+		}
+	}
+	
 	@Test
 	public void testtable(){
 		Hashtable<String, Map<String, String>> ht = new Hashtable<String, Map<String, String>>();

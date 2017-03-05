@@ -10,7 +10,7 @@ public class Dec extends ASTNode {
 	
 	TypeName typeName;
 	
-	public TypeName getTypeName() throws SyntaxException {
+	public TypeName getTypeName() {
 		return typeName;
 	}
 

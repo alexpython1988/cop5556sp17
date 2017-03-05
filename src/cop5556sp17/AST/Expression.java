@@ -8,7 +8,7 @@ public abstract class Expression extends ASTNode {
 	
 	TypeName typeName;
 	
-	public TypeName getTypeName() throws SyntaxException {
+	public TypeName getTypeName(){
 		return typeName;
 	}
 

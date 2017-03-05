@@ -13,7 +13,7 @@ public abstract class Chain extends Statement {
 	
 	TypeName typeName;
 	
-	public TypeName getTypeName() throws SyntaxException {
+	public TypeName getTypeName(){
 		return typeName;
 	}
 

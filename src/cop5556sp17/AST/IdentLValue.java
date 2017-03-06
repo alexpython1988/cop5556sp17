@@ -3,7 +3,6 @@ package cop5556sp17.AST;
 import cop5556sp17.Scanner.Token;
 
 public class IdentLValue extends ASTNode {
-	
 	Dec dec;
 	
 	public Dec getDec() {

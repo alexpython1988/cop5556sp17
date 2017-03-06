@@ -7,7 +7,4 @@ public abstract class ChainElem extends Chain {
 	public ChainElem(Token firstToken) {
 		super(firstToken);
 	}
-
-	
-
 }

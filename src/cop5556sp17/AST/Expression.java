@@ -15,6 +15,10 @@ public abstract class Expression extends ASTNode {
 	public void setTypeName(Token t) throws SyntaxException {
 		this.typeName = Type.getTypeName(t);
 	}
+	
+	public void setTypeName(TypeName typeName){
+		this.typeName = typeName;
+	}
 
 	protected Expression(Token firstToken) {
 		super(firstToken);

@@ -20,5 +20,9 @@ public abstract class Chain extends Statement {
 	public void setTypeName(Token t) throws SyntaxException {
 		this.typeName = Type.getTypeName(t);
 	}
+	
+	public void setTypeName(TypeName typeName){
+		this.typeName = typeName;
+	}
 
 }

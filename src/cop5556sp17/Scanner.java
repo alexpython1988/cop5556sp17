@@ -162,6 +162,18 @@ public class Scanner {
 		public boolean isKind(Kind kind) {
 			return this.kind.equals(kind);
 		}
+		
+		public boolean isKind(Kind... kind) {
+			boolean flag = false;
+			for(Kind k: kind){
+				if(this.kind.equals(k)){
+					flag = true;
+					break;
+				}
+			}
+			
+			return flag;
+		}
 
 		@Override
 		public int hashCode() {

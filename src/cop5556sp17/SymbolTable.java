@@ -13,7 +13,6 @@ import cop5556sp17.AST.Dec;
 
 public class SymbolTable {
 	
-	//TODO  add fields
 	Stack<Integer> st;
 	int scopeNum;
 	//check MyTest for hashmap implementation
@@ -25,7 +24,6 @@ public class SymbolTable {
 	 * to be called when block entered
 	 */
 	public void enterScope(){
-		//TODO:  IMPLEMENT THIS
 		scopeNum++;	
 		st.push(scopeNum);
 	}
@@ -34,13 +32,11 @@ public class SymbolTable {
 	 * leaves scope
 	 */
 	public void leaveScope(){
-		//TODO:  IMPLEMENT THIS
 		st.pop();
 		scopeNum--;
 	}
 	
 	public boolean insert(String ident, Dec dec){
-		//TODO:  IMPLEMENT THIS
 		if(varNames.containsKey(ident)){
 			LinkedList<Map<String, Object>> idents = varNames.get(ident);
 			int cScope = st.peek();
@@ -55,12 +51,7 @@ public class SymbolTable {
 			attributes.put("info", dec);
 			varNames.get(ident).add(attributes);
 		}else{
-			//insert new ident into the symboltable
-			
-//			move these two to visitor
-//			Token type = dec.getType();
-//			dec.setTypeName(type);
-			
+			//insert new ident into the symbol table
 			attributes = new HashMap<String, Object>();
 			attributes.put("scope", st.peek());
 			attributes.put("info", dec);
@@ -72,11 +63,10 @@ public class SymbolTable {
 	}
 	
 	public Dec lookup(String ident){
-		//TODO:  IMPLEMENT THIS
 		Dec dec = null; 
-		int min = -2;
 		//int cScope = st.peek();
-		if(varNames.contains(ident)){
+		if(varNames.keySet().contains(ident)){
+			int min = -2;
 			for(Map<String, Object> each: varNames.get(ident)){
 				int res = st.search((int) each.get("scope"));
 				Dec temp = (Dec) each.get("info");
@@ -85,19 +75,18 @@ public class SymbolTable {
 					dec = temp;
 				}
 			}
-			
-			if(min == -1){
-				return null;
-			}
-		}else{
-			return null;
+//			
+//			if(min == -1){
+//				return null;
+//			}
+//		}else{
+//			return null;
 		}
 		
 		return dec;
 	}
 		
 	public SymbolTable() {
-		//TODO:  IMPLEMENT THIS
 		st = new Stack<Integer>();
 		varNames = new Hashtable<String, LinkedList<Map<String, Object>>>();
 		scopeNum = 0;
@@ -106,7 +95,7 @@ public class SymbolTable {
 
 	@Override
 	public String toString() {
-		String lines = "variable\t\t + information\n";
+		String lines = "variable\t\tinformation\n";
 		Iterator<Entry<String, LinkedList<Map<String, Object>>>> itr =  varNames.entrySet().iterator();
 		while(itr.hasNext()){
 			Entry<String, LinkedList<Map<String, Object>>> en  = itr.next();
@@ -115,7 +104,7 @@ public class SymbolTable {
 				lines += varName + "\t\t" + inf;
 			}
 		}
-		return "Symbol Table\n" + lines;
+		return "Symbol Table\n\n" + lines;
 	}
 	
 

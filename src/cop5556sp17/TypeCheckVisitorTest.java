@@ -38,7 +38,8 @@ public class TypeCheckVisitorTest {
 		Parser parser = new Parser(scanner);
 		ASTNode program = parser.parse();
 		TypeCheckVisitor v = new TypeCheckVisitor();
-		program.visit(v, null);		
+		program.visit(v, null);	
+		System.out.println(v.getSymTbl());
 	}
 
 	@Test

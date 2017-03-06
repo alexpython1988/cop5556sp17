@@ -20,8 +20,6 @@ public class FrameOpChain extends ChainElem {
 		return "FrameOpChain [tuple=" + tuple + "]";
 	}
 	
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

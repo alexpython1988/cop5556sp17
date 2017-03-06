@@ -21,6 +21,44 @@ import cop5556sp17.AST.Type.TypeName;
 public class MyTest {
 	
 	@Test
+	public void testSwitch(){
+		int[] arr = new int[]{1,2,5,6,7};
+		for(int i: arr){
+			switch1(i);
+		}
+ 	}
+	
+	private void switch1(int i){	
+		switch (i) {
+		case 1:
+		case 2:{
+			System.out.println("a");
+		}		
+			break;
+		case 3:
+			System.out.println("b");
+			break;
+		case 4:
+			System.out.println("c");
+			break;
+
+		default:
+			switch (i*i) {
+			case 25:
+				System.out.println("d");
+				break;
+			case 36:
+				System.out.println("e");
+				break;
+
+			default:
+				System.out.println("f");
+				break;
+			}
+		}
+	}
+	
+	@Test
 	public void testStack(){
 		Stack<Integer> st = new  Stack<Integer>();
 		st.push(1);
@@ -42,13 +80,13 @@ public class MyTest {
 		LinkedList<Map<String, Object>> ll = new LinkedList<Map<String, Object>>();
 		
 		Map<String, Object> a = new HashMap<String, Object>();
-		a.put("scope", 1);
+		a.put("scope", 4);
 		a.put("typename", TypeName.IMAGE);
 		Map<String, Object> a1 = new HashMap<String, Object>();
 		a1.put("scope", 2);
 		a1.put("typename", TypeName.INTEGER);
 		Map<String, Object> a2 = new HashMap<String, Object>();
-		a2.put("scope", 2);
+		a2.put("scope", 3);
 		a2.put("typename", TypeName.BOOLEAN);
 		
 		ll.add(a1);
@@ -63,8 +101,12 @@ public class MyTest {
 		v.put("t1",ll);
 		
 		System.out.println(v);
+		System.out.println(v.get("t"));
+		System.out.println(v.keySet().contains("t"));
 		
-		LinkedList<Map<String, Object>> l1 = v.get("t");
+		lookup("t1", v);
+		
+//		LinkedList<Map<String, Object>> l1 = v.get("t");
 //		for(int i = 0; i < l1.size(); i++){
 //			System.out.println(l1.get(i).get("scope"));
 //		}
@@ -73,14 +115,30 @@ public class MyTest {
 //			System.out.println(each.get("typename"));
 //		}
 		
-		Iterator<Entry<String, LinkedList<Map<String, Object>>>> itr = v.entrySet().iterator();
-		while(itr.hasNext()){
-			Entry<String, LinkedList<Map<String, Object>>> en =  itr.next();
-			String name = en.getKey();
-			for(Map<String, Object> m :en.getValue()){
-				System.out.println(name + "\t\t" + m);
+//		Iterator<Entry<String, LinkedList<Map<String, Object>>>> itr = v.entrySet().iterator();
+//		while(itr.hasNext()){
+//			Entry<String, LinkedList<Map<String, Object>>> en =  itr.next();
+//			String name = en.getKey();
+//			for(Map<String, Object> m :en.getValue()){
+//				System.out.println(name + "\t\t" + m);
+//			}
+//		}
+	}
+	
+	void lookup(String s, Hashtable<String, LinkedList<Map<String, Object>>> v){
+		String info = "no found!";
+		int min = -2;
+		if(v.keySet().contains(s)){
+			System.out.println(1);
+			for(Map<String, Object> each: v.get(s)){
+				if(min == -2 || min >= (int)each.get("scope")){
+					min = (int)each.get("scope");
+					info = "" + (TypeName)each.get("typename");
+				}
 			}
 		}
+		
+		System.out.println(info);
 	}
 	
 	@Test

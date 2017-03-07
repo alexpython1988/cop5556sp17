@@ -87,7 +87,7 @@ public class TypeCheckVisitor implements ASTVisitor {
 				}else{
 					throw new TypeCheckException("Illegal operator. Expected ARROW but get " + arrow.kind);
 				}
-			}else if(ce.getFirstToken().isKind(OP_GRAY, OP_BLUR, OP_CONVOLVE) && ce instanceof ImageOpChain){
+			}else if(ce.getFirstToken().isKind(OP_GRAY, OP_BLUR, OP_CONVOLVE) && ce instanceof FilterOpChain){
 				if(arrow.isKind(ARROW, BARARROW)){
 					binaryChain.setTypeName(IMAGE);
 				}else{
@@ -121,7 +121,7 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitBinaryExpression(BinaryExpression binaryExpression, Object arg) throws Exception {
-		//TODO consider the logic order?
+		//XXX consider the logic order?
 		TypeName binaryExprType = null;
 		TypeName t0 = (TypeName) binaryExpression.getE0().visit(this, null);
 		Token operator = binaryExpression.getOp();
@@ -221,19 +221,48 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitFilterOpChain(FilterOpChain filterOpChain, Object arg) throws Exception {
-		// TODO Auto-generated method stub
+		int tupleSize = (int) filterOpChain.getArg().visit(this, null);
+		
+		if(!(tupleSize == 0)){
+			throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+		}
+		
+		filterOpChain.setTypeName(IMAGE);
 		return null;
 	}
 
 	@Override
 	public Object visitFrameOpChain(FrameOpChain frameOpChain, Object arg) throws Exception {
-		// TODO Auto-generated method stub
+		Token frameOp = frameOpChain.getFirstToken();
+		frameOpChain.setKind(frameOp.kind);
+		
+		int tupleSize = (int) frameOpChain.getArg().visit(this, null);
+		
+		if(frameOp.isKind(KW_SHOW, KW_HIDE)){
+			if(!(tupleSize == 0)){
+				throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+			}
+			frameOpChain.setTypeName(NONE);
+		}else if(frameOp.isKind(KW_XLOC, KW_YLOC)){
+			if(!(tupleSize == 0)){
+				throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+			}
+			frameOpChain.setTypeName(INTEGER);
+		}else if(frameOp.isKind(KW_MOVE)){
+			if(!(tupleSize == 2)){
+				throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+			}
+			frameOpChain.setTypeName(NONE);
+		}else{
+			throw new TypeCheckException("Parser Error!");
+		}
+			
 		return null;
 	}
 
 	@Override
 	public Object visitIdentChain(IdentChain identChain, Object arg) throws Exception {
-		// TODO Auto-generated method stub
+		identChain.setTypeName(symtab.lookup(identChain.getFirstToken().getText()).getTypeName());
 		return null;
 	}
 
@@ -274,7 +303,6 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitSleepStatement(SleepStatement sleepStatement, Object arg) throws Exception {
-		// TODO Auto-generated method stub
 		TypeName tn = (TypeName) sleepStatement.getE().visit(this, null);
 		if(!tn.isType(INTEGER))
 			throw new TypeCheckException("The type in sleep statement should be Integer but get " + 
@@ -296,7 +324,6 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitDec(Dec declaration, Object arg) throws Exception {
-		// TODO Auto-generated method stub
 		declaration.setTypeName(declaration.getType());
 		symtab.insert(declaration.getIdent().getText(), declaration);
 		return null;
@@ -352,12 +379,29 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitImageOpChain(ImageOpChain imageOpChain, Object arg) throws Exception {
-		// TODO Auto-generated method stub
+		Token imageOp = imageOpChain.getFirstToken();
+		imageOpChain.setKind(imageOp.kind);
+		int tupleSize = (int) imageOpChain.getArg().visit(this, null);
+		
+		if(imageOp.isKind(OP_WIDTH, OP_HEIGHT)){
+			if(tupleSize == 0){
+				imageOpChain.setTypeName(INTEGER);
+			}else{
+				throw new TypeCheckException("The tuple size of ImageOpChain is expected to be 0 but get " + tupleSize);
+			}
+		}else if(imageOp.isKind(KW_SCALE)){
+			if(tupleSize == 1){
+				imageOpChain.setTypeName(IMAGE);
+			}else{
+				throw new TypeCheckException("The tuple size of ImageOpChain is expected to be 1 but get " + tupleSize);
+			}
+		}
+				
 		return null;
 	}
 
 	@Override
-	public Object visitTuple(Tuple tuple, Object arg) throws Exception {
+	public Object visitTuple(Tuple tuple, Object arg) throws Exception {	
 		for(Expression e: tuple.getExprList()){
 			TypeName tn = (TypeName) e.visit(this, null);
 			if(!tn.equals(INTEGER)){
@@ -366,6 +410,6 @@ public class TypeCheckVisitor implements ASTVisitor {
 			}
 		}
 		
-		return null;
+		return tuple.getExprList().size();
 	}
 }

@@ -32,7 +32,7 @@ public class TypeCheckVisitorTest {
 
 	@Test
 	public void testAssignmentBoolLit0() throws Exception{
-		String input = "p {\nboolean y \ny <- false;}";
+		String input = "p {\nboolean y \ny <- false;if(y){integer x x <- 4;}}";
 		Scanner scanner = new Scanner(input);
 		scanner.scan();
 		Parser parser = new Parser(scanner);
@@ -54,6 +54,17 @@ public class TypeCheckVisitorTest {
 		program.visit(v, null);		
 	}		
 
-
+	@Test
+	public void testSymbolTable0() throws Exception{
+		//TODO add string for symbol table test
+		String input = "";
+		Scanner scanner = new Scanner(input);
+		scanner.scan();
+		Parser parser = new Parser(scanner);
+		ASTNode program = parser.parse();
+		TypeCheckVisitor v = new TypeCheckVisitor();
+		program.visit(v, null);	
+		System.out.println(v.getSymTbl());
+	}
 
 }

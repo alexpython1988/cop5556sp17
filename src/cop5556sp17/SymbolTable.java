@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import java.util.Stack;
 import cop5556sp17.AST.Dec;
 
@@ -101,7 +100,7 @@ public class SymbolTable {
 			Entry<String, LinkedList<Map<String, Object>>> en  = itr.next();
 			String varName = en.getKey();
 			for(Map<String, Object> inf:  en.getValue()){
-				lines += varName + "\t\t" + inf;
+				lines += varName + "\t\t" + inf + "\n";
 			}
 		}
 		return "Symbol Table\n\n" + lines;

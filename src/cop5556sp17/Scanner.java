@@ -137,7 +137,7 @@ public class Scanner {
 		}
 		
 		//returns a LinePos object representing the line and column of this Token
-		LinePos getLinePos(){
+		public LinePos getLinePos(){
 			return new LinePos(FindLineNumber(pos), pos - startPosForEachLine.get(FindLineNumber(pos)));
 		}
 

@@ -89,6 +89,7 @@ public class SymbolTable {
 		st = new Stack<Integer>();
 		varNames = new Hashtable<String, LinkedList<Map<String, Object>>>();
 		scopeNum = 0;
+		st.push(scopeNum);
 	}
 
 

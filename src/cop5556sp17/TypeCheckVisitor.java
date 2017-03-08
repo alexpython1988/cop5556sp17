@@ -39,12 +39,13 @@ public class TypeCheckVisitor implements ASTVisitor {
 		switch (tn0) {
 		case URL:
 		case FILE:{
-			if(binaryChain.getE1().getTypeName().equals(IMAGE) && arrow.isKind(ARROW)){
+			if(binaryChain.getE1().getTypeName().isType(IMAGE) && arrow.isKind(ARROW)){
 				binaryChain.setTypeName(IMAGE);
 			}else{
-				throw new TypeCheckException("The type of chain element is expected as IMAGE and "
+				throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+						" The type of chain element is expected as IMAGE and "
 						+ "the operator is expected to be ARROW, but get chain element as " + 
-						binaryChain.getE1().getTypeName() + " and operator as" + arrow.kind);
+						binaryChain.getE1().getTypeName() + " and operator as" + arrow.kind );
 			}
 		}
 			break;
@@ -57,12 +58,13 @@ public class TypeCheckVisitor implements ASTVisitor {
 						&& ce instanceof FrameOpChain){
 					binaryChain.setTypeName(FRAME);
 				}else{
-					throw new TypeCheckException("Chain element must be FrameOpChain"
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+							" Chain element must be FrameOpChain"
 							+  " and the tokens must start with [KW_XLOC, KW_YLOC, KW_SHOW, KW_HIDE, KW_MOVE]"
 							+ " but get " + ce.getFirstToken().kind);
 				}
 			}else{
-				throw new TypeCheckException("Illegal operator: expected ARROW but get " + arrow.kind);
+				throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + "Illegal operator: expected ARROW but get " + arrow.kind);
 			}
 		}		
 			break;
@@ -73,46 +75,54 @@ public class TypeCheckVisitor implements ASTVisitor {
 				if(arrow.isKind(ARROW)){
 					binaryChain.setTypeName(IMAGE);
 				}else{
-					throw new TypeCheckException("Illegal operator. Expected ARROW but get " + arrow.kind);
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+							" Illegal operator. Expected ARROW but get " + arrow.kind);
 				}
-			}else if(ce.getTypeName().equals(FRAME)){
+			}else if(ce.getTypeName().isType(FRAME)){
 				if(arrow.isKind(ARROW)){
 					binaryChain.setTypeName(FRAME);
 				}else{
-					throw new TypeCheckException("Illegal operator. Expected ARROW but get " + arrow.kind);
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+							" Illegal operator. Expected ARROW but get " + arrow.kind);
 				}
-			}else if(ce.getTypeName().equals(FILE)){
+			}else if(ce.getTypeName().isType(FILE)){
 				if(arrow.isKind(ARROW)){
 					binaryChain.setTypeName(NONE);
 				}else{
-					throw new TypeCheckException("Illegal operator. Expected ARROW but get " + arrow.kind);
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+							" Illegal operator. Expected ARROW but get " + arrow.kind);
 				}
 			}else if(ce.getFirstToken().isKind(OP_GRAY, OP_BLUR, OP_CONVOLVE) && ce instanceof FilterOpChain){
 				if(arrow.isKind(ARROW, BARARROW)){
 					binaryChain.setTypeName(IMAGE);
 				}else{
-					throw new TypeCheckException("Illegal operator. Expected ARROW or BARARROW but get " + arrow.kind);
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+							" Illegal operator. Expected ARROW or BARARROW but get " + arrow.kind);
 				}
 			}else if(ce.getFirstToken().isKind(KW_SCALE) && ce instanceof ImageOpChain){
 				if(arrow.isKind(ARROW)){
 					binaryChain.setTypeName(IMAGE);
 				}else{
-					throw new TypeCheckException("Illegal operator. Expected ARROW but get " + arrow.kind);
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+							" Illegal operator. Expected ARROW but get " + arrow.kind);
 				}
 			}else if(ce instanceof IdentChain){
 				if(arrow.isKind(ARROW)){
 					binaryChain.setTypeName(IMAGE);
 				}else{
-					throw new TypeCheckException("Illegal operator. Expected ARROW but get " + arrow.kind);
+					throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() +
+							" Illegal operator. Expected ARROW but get " + arrow.kind);
 				}
 			}else{
-				throw new TypeCheckException("Illegal type for chain element." + ce.getFirstToken().getText());
+				throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() +
+						" Illegal type for chain element." + ce.getFirstToken().getText());
 			}
 		}
 			break;
 		
 		default:
-			throw new TypeCheckException("Illegal type for chain. Expected [URL, FILE, FRAME, IMAGE]"
+			throw new TypeCheckException("At pos: " + binaryChain.getFirstToken().getLinePos() + 
+					" Illegal type for chain. Expected [URL, FILE, FRAME, IMAGE]"
 					+ " but get " + tn0);
 		}
 		
@@ -129,53 +139,60 @@ public class TypeCheckVisitor implements ASTVisitor {
 		
 		switch (t0) {
 		case INTEGER:{
-			if(t1.equals(INTEGER)){
+			if(t1.isType(INTEGER)){
 				if(operator.isKind(PLUS, MINUS, TIMES, DIV)){
 					binaryExprType = TypeName.INTEGER;
 				}else if(operator.isKind(LT, GT, LE, GE)){
 					binaryExprType = TypeName.BOOLEAN;
 				}else{
-					throw new TypeCheckException("Illegal operator, expected one of ops in "
+					throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() +
+							" Illegal operator, expected one of ops in "
 							+ "[PLUS, MINUS, TIMES, DIV,LT, GT, LE, GE], but get " + operator.kind);
 				}
-			}else if(t1.equals(IMAGE)){
+			}else if(t1.isType(IMAGE)){
 				if(operator.isKind(TIMES)){
 					binaryExprType = TypeName.IMAGE;
 				}else{
-					throw new TypeCheckException("Illegal operator, expected PLUS, but get " + operator.kind);
+					throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+							" Illegal operator, expected PLUS, but get " + operator.kind);
 				}
 			}else{
-				throw new TypeCheckException("Illegal type: expected one of types in [INTEGER, IMAGE] "
+				throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+						" Illegal type: expected one of types in [INTEGER, IMAGE] "
 						+ "but get " + t1);
 			}
 		}
 			break;
 		
 		case IMAGE:{
-			if(t1.equals(IMAGE)){
+			if(t1.isType(IMAGE)){
 				if(operator.isKind(PLUS, MINUS)){
 					binaryExprType = TypeName.IMAGE;
 				}else{
-					throw new TypeCheckException("Illegal operator, expected PLUS or MINUS, but get " + operator.kind);
+					throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+							" Illegal operator, expected PLUS or MINUS, but get " + operator.kind);
 				}
-			}else if(t1.equals(INTEGER)){
+			}else if(t1.isType(INTEGER)){
 				if(operator.isKind(Kind.TIMES)){
 					binaryExprType = TypeName.IMAGE;
 				}else{
-					throw new TypeCheckException("Illegal operator, expected TIMES, but get " + operator.kind);
+					throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+							" Illegal operator, expected TIMES, but get " + operator.kind);
 				}
 			}else{
-				throw new TypeCheckException("Illegal type: expected one of types in [INTEGER, IMAGE] "
+				throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+						" Illegal type: expected one of types in [INTEGER, IMAGE] "
 						+ "but get " + t1);
 			}
 		}
 		 	break;
 		
 		case BOOLEAN:{
-			if(t1.equals(BOOLEAN)){
+			if(t1.isType(BOOLEAN)){
 				binaryExprType = TypeName.BOOLEAN;
 			}else{
-				throw new TypeCheckException("Illegal type: expected BOOLEAN, but get " + t1);
+				throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+						" Illegal type: expected BOOLEAN, but get " + t1);
 			}
 		}
 			break;
@@ -184,7 +201,8 @@ public class TypeCheckVisitor implements ASTVisitor {
 			if((operator.isKind(EQUAL) || operator.isKind(NOTEQUAL)) && t0.equals(t1)){
 				binaryExprType = BOOLEAN;
 			}else{
-				throw new TypeCheckException("Illegal binary expression. Check the expression start with token: " +
+				throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos() + 
+						" Illegal binary expression. Check the expression start with token: " +
 						binaryExpression.getE0().getFirstToken().getText());
 			}
 			
@@ -224,7 +242,8 @@ public class TypeCheckVisitor implements ASTVisitor {
 		int tupleSize = (int) filterOpChain.getArg().visit(this, null);
 		
 		if(!(tupleSize == 0)){
-			throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+			throw new TypeCheckException("At pos: " + filterOpChain.getFirstToken().getLinePos() + 
+					" The tuple size should be 0 but get " + tupleSize);
 		}
 		
 		filterOpChain.setTypeName(IMAGE);
@@ -240,21 +259,24 @@ public class TypeCheckVisitor implements ASTVisitor {
 		
 		if(frameOp.isKind(KW_SHOW, KW_HIDE)){
 			if(!(tupleSize == 0)){
-				throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+				throw new TypeCheckException("At pos:" + frameOpChain.getFirstToken().getLinePos() + " The tuple size should be 0 but get " + tupleSize);
 			}
 			frameOpChain.setTypeName(NONE);
 		}else if(frameOp.isKind(KW_XLOC, KW_YLOC)){
 			if(!(tupleSize == 0)){
-				throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+				throw new TypeCheckException("At pos:" + frameOpChain.getFirstToken().getLinePos() + 
+						" The tuple size should be 0 but get " + tupleSize);
 			}
 			frameOpChain.setTypeName(INTEGER);
 		}else if(frameOp.isKind(KW_MOVE)){
 			if(!(tupleSize == 2)){
-				throw new TypeCheckException("The tuple size should be 0 but get " + tupleSize);
+				throw new TypeCheckException("At pos:" + frameOpChain.getFirstToken().getLinePos() + 
+						" The tuple size should be 0 but get " + tupleSize);
 			}
 			frameOpChain.setTypeName(NONE);
 		}else{
-			throw new TypeCheckException("Parser Error!");
+			throw new TypeCheckException("At pos:" + frameOpChain.getFirstToken().getLinePos() + 
+					" Parser Error!");
 		}
 			
 		return null;
@@ -262,7 +284,14 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitIdentChain(IdentChain identChain, Object arg) throws Exception {
-		identChain.setTypeName(symtab.lookup(identChain.getFirstToken().getText()).getTypeName());
+		Dec dec = symtab.lookup(identChain.getFirstToken().getText());
+		if(dec == null){
+			throw new TypeCheckException("At pos: " + identChain.getFirstToken().getLinePos() + 
+					" The ident: " + identChain.getFirstToken().getText() +
+					"is not defined or visible in current scope.");
+		}
+		
+		identChain.setTypeName(dec.getTypeName());
 		return null;
 	}
 
@@ -271,7 +300,8 @@ public class TypeCheckVisitor implements ASTVisitor {
 		Dec dec = symtab.lookup(identExpression.getFirstToken().getText());
 		
 		if(dec == null){
-			throw new TypeCheckException("The ident: " + identExpression.getFirstToken().getText() +
+			throw new TypeCheckException("At pos: " + identExpression.getFirstToken().getLinePos() + 
+					" The ident: " + identExpression.getFirstToken().getText() +
 					"is not defined or visible in current scope.");
 		}
 		
@@ -285,8 +315,9 @@ public class TypeCheckVisitor implements ASTVisitor {
 	public Object visitIfStatement(IfStatement ifStatement, Object arg) throws Exception {
 		TypeName tn = (TypeName) ifStatement.getE().visit(this, null);
 		
-		if(!tn.equals(BOOLEAN)){
-			throw new TypeCheckException("Illegal expression, the expression in if statement does not return BOOLEAN, "
+		if(!tn.isType(BOOLEAN)){
+			throw new TypeCheckException("At pos: " + ifStatement.getFirstToken().getLinePos() + 
+					" Illegal expression, the expression in if statement does not return BOOLEAN, "
 					+ "but " + tn);
 		}
 		
@@ -305,16 +336,17 @@ public class TypeCheckVisitor implements ASTVisitor {
 	public Object visitSleepStatement(SleepStatement sleepStatement, Object arg) throws Exception {
 		TypeName tn = (TypeName) sleepStatement.getE().visit(this, null);
 		if(!tn.isType(INTEGER))
-			throw new TypeCheckException("The type in sleep statement should be Integer but get " + 
-											tn);
+			throw new TypeCheckException("At pos: " + sleepStatement.getFirstToken().getLinePos() + 
+					" The type in sleep statement should be Integer but get " + tn);
 		return null;
 	}
 
 	@Override
 	public Object visitWhileStatement(WhileStatement whileStatement, Object arg) throws Exception {
 		TypeName tn = (TypeName) whileStatement.getE().visit(this, null);
-		if(!tn.equals(BOOLEAN))
-			throw new TypeCheckException("Illegal expression, the expression in while statement "
+		if(!tn.isType(BOOLEAN))
+			throw new TypeCheckException("at pos: " + whileStatement.getFirstToken().getLinePos() + 
+					" Illegal expression, the expression in while statement "
 					+ "does not return BOOLEAN but " + tn);
 		
 		whileStatement.getB().visit(this, null);
@@ -347,8 +379,9 @@ public class TypeCheckVisitor implements ASTVisitor {
 //		assignStatement.getE().visit(this, null);
 		TypeName tni = (TypeName) assignStatement.getVar().visit(this, null);
 		TypeName tne = (TypeName) assignStatement.getE().visit(this, null);
-		if(!tni.equals(tne))
-			throw new TypeCheckException("The type of identVar is " + tni + " but the given type of expression is " + tne);
+		if(!tni.isType(tne))
+			throw new TypeCheckException("At pos: " + assignStatement.getFirstToken().getLinePos() + 
+					" The type of identVar is " + tni + " but the given type of expression is " + tne);
 		
 		return null;
 	}
@@ -359,7 +392,8 @@ public class TypeCheckVisitor implements ASTVisitor {
 		Dec dec = symtab.lookup(identX.getText());
 		
 		if(dec == null)
-			throw new TypeCheckException("The ident: " + identX.getText() + " is not defined or visible in current scope.");
+			throw new TypeCheckException("At pos: " + identX.getFirstToken().getLinePos() +
+					" The ident: " + identX.getText() + " is not defined or visible in current scope.");
 		
 		identX.setDec(dec);
 		return dec.getTypeName();
@@ -387,13 +421,16 @@ public class TypeCheckVisitor implements ASTVisitor {
 			if(tupleSize == 0){
 				imageOpChain.setTypeName(INTEGER);
 			}else{
-				throw new TypeCheckException("The tuple size of ImageOpChain is expected to be 0 but get " + tupleSize);
+				throw new TypeCheckException("At pos: " + imageOpChain.getFirstToken().getLinePos() 
+						+ " The tuple size of ImageOpChain is expected to be 0 but get " + tupleSize);
+				
 			}
 		}else if(imageOp.isKind(KW_SCALE)){
 			if(tupleSize == 1){
 				imageOpChain.setTypeName(IMAGE);
 			}else{
-				throw new TypeCheckException("The tuple size of ImageOpChain is expected to be 1 but get " + tupleSize);
+				throw new TypeCheckException("At pos: " + imageOpChain.getFirstToken().getLinePos()  +
+						" The tuple size of ImageOpChain is expected to be 1 but get " + tupleSize);
 			}
 		}
 				
@@ -404,8 +441,9 @@ public class TypeCheckVisitor implements ASTVisitor {
 	public Object visitTuple(Tuple tuple, Object arg) throws Exception {	
 		for(Expression e: tuple.getExprList()){
 			TypeName tn = (TypeName) e.visit(this, null);
-			if(!tn.equals(INTEGER)){
-				throw new TypeCheckException("Expect a INTEGER for "  + 
+			if(!tn.isType(INTEGER)){
+				throw new TypeCheckException("At pos: " + tuple.getFirstToken().getLinePos() + 
+						" Expect a INTEGER for "  + 
 						e.getFirstToken().getText() + " , but got " + e.getTypeName());
 			}
 		}

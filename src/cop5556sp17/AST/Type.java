@@ -15,7 +15,7 @@ public class Type  {
 		case KW_URL: {return TypeName.URL;} 
 		case KW_FILE: {return TypeName.FILE;} 
 		default: throw new Parser.SyntaxException("illegal type, expected [Integer, Boolean, Image, "
-				+ "Frame, URL, File], but get " + token.kind);
+				+ "Frame, URL, File], but get " + token.kind + " at pos: " + token.getLinePos());
 		}		
 	}
 

@@ -57,7 +57,7 @@ public class TypeCheckVisitorTest {
 	@Test
 	public void testSymbolTable0() throws Exception{
 		//TODO add string for symbol table test
-		String input = "";
+		String input = "p file abc, boolean x {\nframe abc integer y \ny <- 3;if(y >= 3){image abc integer bcd }}";
 		Scanner scanner = new Scanner(input);
 		scanner.scan();
 		Parser parser = new Parser(scanner);

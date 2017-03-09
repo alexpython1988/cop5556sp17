@@ -357,7 +357,10 @@ public class TypeCheckVisitor implements ASTVisitor {
 	@Override
 	public Object visitDec(Dec declaration, Object arg) throws Exception {
 		declaration.setTypeName(declaration.getType());
-		symtab.insert(declaration.getIdent().getText(), declaration);
+		if(!symtab.insert(declaration.getIdent().getText(), declaration))
+			throw new TypeCheckException("At pos: " + declaration.getFirstToken().getLinePos() + 
+					"The identifier " + declaration.getIdent().getText() + " is already defined in "
+							+ " the current scope." );
 		return null;
 	}
 
@@ -401,7 +404,10 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitParamDec(ParamDec paramDec, Object arg) throws Exception {
-		symtab.insert(paramDec.getIdent().getText(), paramDec);
+		if(!symtab.insert(paramDec.getIdent().getText(), paramDec))
+			throw new TypeCheckException("At pos: " + paramDec.getFirstToken().getLinePos() + 
+					"The identifier " + paramDec.getIdent().getText() + " is already defined in "
+							+ " the current scope." );
 		return null;
 	}
 

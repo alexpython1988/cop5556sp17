@@ -41,12 +41,12 @@ public class SymbolTable {
 			int cScope = st.peek();
 			for(Map<String, Object> each: idents){			
 				if(cScope == (int) each.get("scope")){
-					System.out.println("The " + ident + "is already defined.");
+					//System.out.println("The " + ident + "is already defined.");
 					return false;
 				}
 			}
 			attributes = new HashMap<String, Object>();
-			attributes.put("scope", st.peek());
+			attributes.put("scope", cScope);
 			attributes.put("info", dec);
 			varNames.get(ident).add(attributes);
 		}else{

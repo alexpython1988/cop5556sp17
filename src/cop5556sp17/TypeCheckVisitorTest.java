@@ -23,6 +23,7 @@ import cop5556sp17.AST.Statement;
 import cop5556sp17.Parser.SyntaxException;
 import cop5556sp17.Scanner.IllegalCharException;
 import cop5556sp17.Scanner.IllegalNumberException;
+import cop5556sp17.Scanner.Token;
 import cop5556sp17.TypeCheckVisitor.TypeCheckException;
 
 public class TypeCheckVisitorTest {
@@ -57,9 +58,15 @@ public class TypeCheckVisitorTest {
 	@Test
 	public void testSymbolTable0() throws Exception{
 		//TODO add string for symbol table test
-		String input = "p file abc, boolean x {\nframe abc integer y \ny <- 3;if(y >= 3){image abc integer bcd }}";
+		String input = "p file abc, boolean x {\n frame abc integer y \ny <- 3; boolean y if(y >= 3){image abc integer bcd }}";
 		Scanner scanner = new Scanner(input);
 		scanner.scan();
+//		Token t;
+//		while((t = scanner.nextToken()) != null){
+//			System.out.print(t.getText() + "   --->type: " + t.kind + " ---->    position: " + t.getLinePos());
+//			System.out.println();	
+//		}
+//		scanner.scan();
 		Parser parser = new Parser(scanner);
 		ASTNode program = parser.parse();
 		TypeCheckVisitor v = new TypeCheckVisitor();

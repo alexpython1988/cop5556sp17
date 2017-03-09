@@ -21,6 +21,17 @@ import cop5556sp17.AST.Type.TypeName;
 public class MyTest {
 	
 	@Test
+	public void testLinkedList(){
+		LinkedList<Integer> ll = new LinkedList<Integer>();
+		int[] a = new int[]{1,2,3,4,5};
+		for(int each: a)
+			ll.add(0, each);
+		
+		System.out.println(ll);
+		
+	}
+	
+	@Test
 	public void testSwitch(){
 		int[] arr = new int[]{1,2,5,6,7};
 		for(int i: arr){

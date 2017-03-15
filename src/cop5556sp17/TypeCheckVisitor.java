@@ -382,7 +382,7 @@ public class TypeCheckVisitor implements ASTVisitor {
 //		assignStatement.getE().visit(this, null);
 		TypeName tni = (TypeName) assignStatement.getVar().visit(this, null);
 		TypeName tne = (TypeName) assignStatement.getE().visit(this, null);
-		if(!tni.isType(tne))
+		if(!tni.equals(tne))
 			throw new TypeCheckException("At pos: " + assignStatement.getFirstToken().getLinePos() + 
 					" The type of identVar is " + tni + " but the given type of expression is " + tne);
 		

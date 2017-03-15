@@ -48,7 +48,7 @@ public class SymbolTable {
 			attributes = new HashMap<String, Object>();
 			attributes.put("scope", cScope);
 			attributes.put("info", dec);
-			varNames.get(ident).add(attributes);
+			idents.addFirst(attributes);
 		}else{
 			//insert new ident into the symbol table
 			attributes = new HashMap<String, Object>();

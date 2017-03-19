@@ -192,7 +192,7 @@ public class Parser {
 			//you will want to provide a more useful error message
 			throw new SyntaxException("illegal factor: " + kind + 
 					". The illegal toke is at " + scanner.getLinePos(t) + 
-					" expected one of [IDENT,INT_LIT,KW_TRUE,KW_FALSE,KW_SCREENWIDTH,KW_SCREENHEIGHT,LPARENT");
+					" expected one of [IDENT, INT_LIT, KW_TRUE, KW_FALSE, KW_SCREENWIDTH, KW_SCREENHEIGHT, LPARENT");
 		}
 		
 		return e;

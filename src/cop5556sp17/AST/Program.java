@@ -29,7 +29,7 @@ public class Program extends ASTNode {
 
 	@Override
 	public String toString() {
-		return "Program [firstToken=" + firstToken + ", paramList=" + params + ", block=" + b + "]";
+		return "Program [firstToken=" + firstToken.getText() + ", paramList=" + params + ", block=" + b + "]";
 	}
 
 	@Override

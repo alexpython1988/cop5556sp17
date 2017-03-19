@@ -32,7 +32,7 @@ public class SymbolTable {
 	 */
 	public void leaveScope(){
 		st.pop();
-		scopeNum--;
+		//scopeNum--;
 	}
 	
 	public boolean insert(String ident, Dec dec){
@@ -63,15 +63,17 @@ public class SymbolTable {
 	
 	public Dec lookup(String ident){
 		Dec dec = null; 
-		//int cScope = st.peek();
+//		int cScope = st.peek();
+//		System.out.println(cScope);
 		if(varNames.keySet().contains(ident)){
 			int min = -2;
 			for(Map<String, Object> each: varNames.get(ident)){
 				int res = st.search((int) each.get("scope"));
-				Dec temp = (Dec) each.get("info");
-				if(min == -2 || min >= res){ 
-					min = res;
-					dec = temp;
+				if(min == -2 || min >= res){
+					if(res != -1){
+						min = res;
+						dec = (Dec) each.get("info");
+					}
 				}
 			}
 //			

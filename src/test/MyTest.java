@@ -21,6 +21,16 @@ import cop5556sp17.AST.Type.TypeName;
 public class MyTest {
 	
 	@Test
+	public void testpp(){
+		int[] a = {1,2,3};
+		int i = 1;
+		// prove that java evaluation expression from left to right
+		a[i] = i++ + 1;
+		for(int k : a)
+			System.out.print(k + " ");
+	}
+	
+	@Test
 	public void testLinkedList(){
 		LinkedList<Integer> ll = new LinkedList<Integer>();
 		int[] a = new int[]{1,2,3,4,5};

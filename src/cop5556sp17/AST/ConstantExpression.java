@@ -11,7 +11,7 @@ public class ConstantExpression extends Expression {
 
 	@Override
 	public String toString() {
-		return "ConstantExpression [firstToken=" + firstToken + "]";
+		return "ConstantExpression [firstToken=" + firstToken.getText() + "]";
 	}
 
 

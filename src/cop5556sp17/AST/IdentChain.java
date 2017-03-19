@@ -11,7 +11,7 @@ public class IdentChain extends ChainElem {
 
 	@Override
 	public String toString() {
-		return "IdentChain [firstToken=" + firstToken + "]";
+		return "IdentChain [firstToken=" + firstToken.getText() + "]";
 	}
 
 

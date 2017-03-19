@@ -7,24 +7,11 @@
 
 package cop5556sp17;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import cop5556sp17.AST.ASTNode;
-import cop5556sp17.AST.Dec;
-import cop5556sp17.AST.IdentExpression;
-import cop5556sp17.AST.Program;
-import cop5556sp17.AST.Statement;
-import cop5556sp17.Parser.SyntaxException;
-import cop5556sp17.Scanner.IllegalCharException;
-import cop5556sp17.Scanner.IllegalNumberException;
-import cop5556sp17.Scanner.Token;
-import cop5556sp17.TypeCheckVisitor.TypeCheckException;
 
 public class TypeCheckVisitorTest {
 

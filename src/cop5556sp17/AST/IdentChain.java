@@ -7,7 +7,16 @@ public class IdentChain extends ChainElem {
 	public IdentChain(Token firstToken) {
 		super(firstToken);
 	}
+	
+	Dec dec;
+	
+	public Dec getDec() {
+		return dec;
+	}
 
+	public void setDec(Dec dec) {
+		this.dec = dec;
+	}
 
 	@Override
 	public String toString() {

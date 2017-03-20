@@ -81,12 +81,12 @@ public class ParserTest {
 	
 	@Test
 	public void testParamDec()  throws IllegalCharException, IllegalNumberException, SyntaxException{
-		String input = "url abc";
-		String input1 = "file abc";
-		String input2 = "integer abc";
+//		String input = "url abc";
+//		String input1 = "file abc";
+//		String input2 = "integer abc";
 		String input3 = "boolean abc";
-		String input4 = "123 abc";
-		String input5 = "true abc";
+//		String input4 = "123 abc";
+//		String input5 = "true abc";
 		Scanner scanner = new Scanner(input3);
 		scanner.scan();
 		Parser parser = new Parser(scanner);

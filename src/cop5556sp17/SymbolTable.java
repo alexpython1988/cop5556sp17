@@ -69,19 +69,11 @@ public class SymbolTable {
 			int min = -2;
 			for(Map<String, Object> each: varNames.get(ident)){
 				int res = st.search((int) each.get("scope"));
-				if(min == -2 || min >= res){
-					if(res != -1){
-						min = res;
-						dec = (Dec) each.get("info");
-					}
+				if((min == -2 || min >= res) && (res != -1)){
+					min = res;
+					dec = (Dec) each.get("info");	
 				}
 			}
-//			
-//			if(min == -1){
-//				return null;
-//			}
-//		}else{
-//			return null;
 		}
 		
 		return dec;

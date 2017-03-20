@@ -61,12 +61,12 @@ public class TypeCheckVisitorTest {
 		testFuncWithoutError(input);
 	}
 	
-	@Test
-	public void testchain1() throws Exception{
-		String input = "p2 ";
-		
-		testFuncWithoutError(input);
-	}
+//	@Test
+//	public void testchain1() throws Exception{
+//		String input = "p2 {}";
+//		
+//		testFuncWithoutError(input);
+//	}
 	
 	@Test
 	public void testSymbolTable0() throws Exception{

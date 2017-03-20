@@ -343,7 +343,7 @@ public class TypeCheckVisitor implements ASTVisitor {
 			}
 			frameOpChain.setTypeName(NONE);
 		} else {
-			throw new TypeCheckException("At pos:" + frameOpChain.getFirstToken().getLinePos() + " Parser Error!");
+			throw new TypeCheckException("At pos:" + frameOpChain.getFirstToken().getLinePos() + ". Parser Error!");
 		}
 
 		return null;
@@ -357,7 +357,8 @@ public class TypeCheckVisitor implements ASTVisitor {
 					+ identChain.getFirstToken().getText() + "is not defined or visible in current scope: "
 					+ symtab.getCurrentScope());
 		}
-
+		
+		identChain.setDec(dec);
 		identChain.setTypeName(dec.getTypeName());
 		return null;
 	}

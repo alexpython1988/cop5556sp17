@@ -20,22 +20,22 @@ public class Type  {
 	}
 
 	public static enum TypeName {
-		INTEGER("tn_integer"), 
-		BOOLEAN("tn_boolean"), 
-		IMAGE("tn_image"), 
-		FRAME("tn_frame"),
-	    URL("tn_url"), 
-	    FILE("tn_file"), 
-	    NONE("tn_none");
+		INTEGER("I"), 
+		BOOLEAN("Z"), 
+		IMAGE("Ljava/awt/image/BufferedImage;"), 
+		FRAME("Lcop5556sp17/MyFrame;"),
+	    URL("Ljava/net/URL;"), 
+	    FILE("Ljava/io/File;"), 
+	    NONE(null);
 		
-		final String text;
+		final String jvmType;
 
-		public String getText() {
-			return text;
+		public String getjvmTypeDesc() {
+			return jvmType;
 		}
 		
-		TypeName(String text){
-			this.text = text;
+		TypeName(String jvmType){
+			this.jvmType = jvmType;
 		}
 		
 		public boolean isType(TypeName... types){
@@ -50,6 +50,11 @@ public class Type  {
 				return true;
 			else
 				return false;
+		}
+		
+		//precondition: is not I or Z
+		public String getJVMClass(){
+			return jvmType.substring(1,jvmType.length()-1);  //removes L and ;
 		}
 	}
 }

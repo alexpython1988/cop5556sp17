@@ -19,6 +19,17 @@ import cop5556sp17.Scanner.Kind;
 import cop5556sp17.AST.Type.TypeName;
 
 public class MyTest {
+	@Test
+	public void testref(){
+		String s = null;
+		changeString(s);
+		System.out.println(s);
+	}
+	
+	public void changeString(Object s){
+		String a = (String) s;
+		a = "alex";
+	}
 	
 	@Test
 	public void testpp(){
@@ -501,7 +512,35 @@ public class MyTest {
 //				System.out.println(k.getText());
 //		}
 //	}
-
+	int k;
+	ArrayList<String> k1;
+	
+	@Test
+	public void testCOunt(){
+		k ++;
+		k1 = new ArrayList<String>();
+		k1.add("a");
+		sum();
+		k1.add("e");
+		for(String each: k1)
+			System.out.println(each);
+	}
+	
+	public void sum1(String s){
+		k1.add(s);
+	}
+	
+	public void sum(int i, int c, int j){		
+		c += i;
+		System.out.println(c + "  " + j + "  " + k);
+		k++;
+	}
+	public void sum(){		
+		k1.add("b");
+		String[] s = {"c", "d"};
+		for(String each : s)
+			sum1(each);
+	}
 	
 	@Test
 	public void testSubString(){
@@ -525,3 +564,139 @@ public class MyTest {
 		//System.out.println(s.charAt(sPos));
 	}
 }
+
+class Test1{
+	static int x;
+	String y;
+	
+	public static void main(String[] args){
+		test1(1,2);
+		
+		System.out.println(x + 10);
+	}
+	
+	static void test1(int a, int b){
+		x = a + b;
+	}
+	
+	String getTest1(String str){
+		return y + str;
+	}
+	
+	public void method1(){
+		int i = 0;
+		boolean b;
+		b = true;
+		if(b)
+			i ++;
+		System.out.println(i);
+	}
+	
+}
+
+class Name implements Runnable{
+    //variables declared in List<ParamDec> are instance variables of the class
+	//int i;
+//	int i1;	
+//	boolean j;
+	int a;
+//	int b;
+//	int c;
+//	boolean bool0;
+	
+	public Name(String[] args){
+       //initialize instance variables with values from args.
+	    	//a = Integer.parseInt(args[0]);
+//	    	i1 = Integer.parseInt(args[2]);
+//	    	j = Boolean.parseBoolean(args[1]);
+			//a = 3;
+        }
+   
+	public static void main(String[] args){
+    	Name instance = new Name(args);
+               instance.run();
+        }
+	public void run(){
+//		int i;
+//		int k;
+//		i = 2;
+//		while(i == 1){
+//			k = 2;
+//			bool0 = i1 > 2;
+//		}
+		
+		int i = 2;
+		a = i + 3;
+		
+		int j = a;
+	}
+//        public void run(){
+//        	a = 4; 
+//        	b = 5; 
+//        	boolean boolA; 
+//        	boolean boolB; 
+//        	boolA = true; 
+//        	boolB = false; 
+//        	if(boolA == true) 
+//        	{boolean a; a = boolA; 
+//        	bool0 = false;
+//        	while(a != boolB)
+//        	{int d; int e; c = 3 + 5; 
+//        	d = 10 - 1; 
+//        	c = c * d; 
+//        	e = d / 3; 
+//        	a = boolB;
+//        	if(c > d) 
+//        	{ c = d; 
+//        	if(c <= d) { boolA = false; }; 
+//        	if(boolA) { c = 0; };
+//        	};
+//        	}; 
+//        	}; 
+//        	if(c >= 1) { /*boolB <- bool0 | true;*/} a = 7;
+//        }
+
+       //declarations and statements from block
+//        int m = 10;
+//        int n = 0;
+//        
+//        while(m > n){
+//        	int k =10;
+//        	int p = k + n; 
+//        	i = p;
+//        }
+//        
+//        if(m > n){
+//        	int k =10;
+//        	int p = k + n; 
+//        	i = p;
+//        }
+//        
+//        System.out.println(i);
+//        }
+//        public void go(){ 
+//        	  int m = 10;
+//              int n = 0;
+//        	if(i > i1){
+//        		int p = i;
+//        		i = p*10;
+//        	}
+//        	 if(j){
+//             	i = m + (2*5);
+//             	n = m + (2*5);
+//             	boolean j1 = true;
+//             	System.out.println(j1);
+//             }
+//        }
+	
+	
+	
+	
+}
+
+
+
+
+
+
+

@@ -1,11 +1,41 @@
 package cop5556sp17.AST;
 
+import org.objectweb.asm.Label;
+
 import cop5556sp17.AST.Type.TypeName;
 import cop5556sp17.Parser.SyntaxException;
 import cop5556sp17.Scanner.Token;
 
 public class Dec extends ASTNode {
 	
+	int slot;
+	Label startLabel = null;
+	Label endLabel = null;
+	
+	public Label getStartLabel() {
+		return startLabel;
+	}
+
+	public void setStartLabel(Label startLabel) {
+		this.startLabel = startLabel;
+	}
+
+	public Label getEndLabel() {
+		return endLabel;
+	}
+
+	public void setEndLabel(Label endLabel) {
+		this.endLabel = endLabel;
+	}
+
+	public int getSlot() {
+		return slot;
+	}
+
+	public void setSlot(int slot) {
+		this.slot = slot;
+	}
+
 	final Token ident;
 	
 	TypeName typeName;

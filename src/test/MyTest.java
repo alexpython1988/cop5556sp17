@@ -600,7 +600,6 @@ class Name implements Runnable{
 //	int i1;	
 //	boolean j;
 	int a;
-<<<<<<< HEAD
 	int b;
 //	int c;
 //	boolean bool0;
@@ -629,39 +628,9 @@ class Name implements Runnable{
 		int i = 2;
 		a = i + 3;
 		b = i + 4;
-		
-=======
-//	int b;
-//	int c;
-//	boolean bool0;
-	
-	public Name(String[] args){
-       //initialize instance variables with values from args.
-	    	//a = Integer.parseInt(args[0]);
-//	    	i1 = Integer.parseInt(args[2]);
-//	    	j = Boolean.parseBoolean(args[1]);
-			//a = 3;
-        }
-   
-	public static void main(String[] args){
-    	Name instance = new Name(args);
-               instance.run();
-        }
-	public void run(){
-//		int i;
-//		int k;
-//		i = 2;
-//		while(i == 1){
-//			k = 2;
-//			bool0 = i1 > 2;
-//		}
-		
-		int i = 2;
-		a = i + 3;
-		
-		int j = a;
->>>>>>> branch 'master' of https://alexgre@bitbucket.org/alexgre/cop5556sp17continue.git
 	}
+		
+
 //        public void run(){
 //        	a = 4; 
 //        	b = 5; 

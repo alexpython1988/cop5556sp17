@@ -613,7 +613,6 @@ public class CodeGenVisitor implements ASTVisitor, Opcodes {
 		//mv.visitLabel(lb);
 		//all the paramDecs will be loaded from field so we set their slot number to -2 to indicate they are fields
 		//paramDec.setSlot(-2);
-		
 		return null;
 	}
 

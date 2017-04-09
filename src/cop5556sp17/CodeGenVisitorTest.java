@@ -77,6 +77,7 @@ public class CodeGenVisitorTest {
 		//String input = "ifwhileStatement0{\ninteger i \ninteger j \ni <-10; \nj <-1; \nif (i > 0) {\ninteger k \nk <-i/j; \nwhile (k > 1) {j <- j+1; \nk <-i/j;} \n} \ni<-j;}";
 		//String input = "whileifwhileStatement1{\ninteger i \ninteger j \ninteger t \ni <-10; \nj <-1; \nt <-2; \nwhile (i > 0) {\ninteger k \nk <-i/j; \nif (k > 1) {\ninteger t \nt <-j; \nwhile (t > 0) {t <- t-1;} \nj <- j+1;} \ni<-i-1;} \ni<-t;}";
 		//String input = "whileifwhileStatement0{\ninteger i \ninteger j \ninteger t \ni <-10; \nj <-1; \nt <-2; \nwhile (i > 0) {\ninteger k \nk <-i/j; \nif (k > 1) {\nwhile (t > 0) {t <- t-1;} \nj <- j+1;} \ni<-i-1;} \ni<-t;}";
+
 		//String input = "pro1 integer i {integer j  j<- i;}";
 		String input = "pro1 integer i, integer j {i <- 2; j <- 3;}";
 		//String input = "pro1 boolean i, integer j  {i <- true; j <- 2;}";

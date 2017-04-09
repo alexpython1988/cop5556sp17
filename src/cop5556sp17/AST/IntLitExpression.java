@@ -48,5 +48,9 @@ public class IntLitExpression extends Expression {
 	public Object visit(ASTVisitor v, Object arg) throws Exception {
 		return v.visitIntLitExpression(this, arg);
 	}
+	
+	public int getIntLitVar(){
+		return value;
+	}
 
 }

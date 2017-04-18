@@ -171,6 +171,30 @@ public class TypeCheckVisitor implements ASTVisitor {
 			}
 		}
 			break;
+			
+		case MOD: {
+			if (t0.isType(INTEGER) && t1.isType(INTEGER)) {
+				binaryExprType = TypeName.INTEGER;
+			}else if (t0.isType(IMAGE) && t1.isType(INTEGER)) {
+				binaryExprType = TypeName.IMAGE;
+			} else {
+			throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos()
+					+ ". Illegal type met: expect [Integer, Integer] or [Image, Integer] " + "but get: " + t0 + " and " + t1);
+			}
+		}
+			break;
+			
+		case AND:
+		case OR:{
+			if(t0.isType(BOOLEAN) && t1.isType(BOOLEAN)){
+				binaryExprType = TypeName.BOOLEAN;
+			} else {
+				throw new TypeCheckException("At pos: " + binaryExpression.getFirstToken().getLinePos()
+						+ ". Illegal type met: expect [Boolean, Boolean] " + "but get: " + t0
+						+ " and " + t1);
+			}
+		}
+			break;
 
 		case LT:
 		case GT:
@@ -306,6 +330,7 @@ public class TypeCheckVisitor implements ASTVisitor {
 
 	@Override
 	public Object visitFilterOpChain(FilterOpChain filterOpChain, Object arg) throws Exception {
+		filterOpChain.setKind(filterOpChain.getFirstToken().kind);
 		int tupleSize = (int) filterOpChain.getArg().visit(this, null);
 
 		if (!(tupleSize == 0)) {
